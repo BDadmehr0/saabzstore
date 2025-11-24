@@ -1,0 +1,196 @@
+{% extends 'store/base.html' %}
+
+{% block title %}صفحه اصلی - سبز استور{% endblock %}
+
+{% block content %}
+    <!-- اسلایدر اصلی -->
+    <section class="relative overflow-hidden">
+        <div class="slider-gradient text-white py-16 md:py-24">
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h2 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">تجربه‌ای متفاوت از <span class="text-emerald-200">لوازم تحریر</span></h2>
+                        <p class="text-xl mb-8 opacity-90">با محصولات منحصربه‌فرد و باکیفیت ما، خلاقیت خود را به نمایش بگذارید</p>
+                        <div class="flex space-x-4 space-x-reverse">
+                            <a href="#" class="bg-white text-emerald-700 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition duration-300 hover-lift">
+                                مشاهده محصولات
+                                <i class="fas fa-arrow-left mr-2"></i>
+                            </a>
+                            <a href="#" class="glass-effect text-white px-6 py-3 rounded-lg font-bold hover:bg-white/20 transition duration-300 hover-lift">
+                                درباره ما
+                            </a>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="bg-white/10 rounded-2xl p-6 backdrop-blur-md border border-white/20">
+                            <img src="https://images.unsplash.com/photo-1585336261022-680e295ce3fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                                 alt="لوازم تحریر" class="w-full h-64 object-cover rounded-xl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+                <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-white/5"></div>
+                <div class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-white/5"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش دسته‌بندی‌ها -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">دسته‌بندی‌های محصولات</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">محصولات ما در دسته‌بندی‌های متنوعی قرار گرفته‌اند تا پیدا کردن آنچه نیاز دارید آسان‌تر شود</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- دسته‌بندی 1 -->
+                <a href="#" class="category-gradient text-white rounded-2xl p-6 text-center hover-lift">
+                    <div class="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-pencil-alt text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">مداد و خودکار</h3>
+                    <p class="text-sm opacity-90">انواع مداد، خودکار و روان‌نویس</p>
+                </a>
+                
+                <!-- دسته‌بندی 2 -->
+                <a href="#" class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="bg-emerald-100 text-emerald-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-book text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">دفتر و کاغذ</h3>
+                    <p class="text-sm text-gray-600">دفتر، کاغذ A4، پاکت و...</p>
+                </a>
+                
+                <!-- دسته‌بندی 3 -->
+                <a href="#" class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="bg-emerald-100 text-emerald-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-palette text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">رنگ و نقاشی</h3>
+                    <p class="text-sm text-gray-600">مداد رنگی، آبرنگ، گواش و...</p>
+                </a>
+                
+                <!-- دسته‌بندی 4 -->
+                <a href="#" class="category-gradient text-white rounded-2xl p-6 text-center hover-lift">
+                    <div class="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-cut text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">قیچی و برش</h3>
+                    <p class="text-sm opacity-90">قیچی، کاتر، خط‌کش و...</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش محصولات ویژه -->
+    <section class="py-16 bg-gradient-to-b from-white to-emerald-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">محصولات ویژه</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">برترین و پرفروش‌ترین محصولات ما که مشتریان زیادی را راضی نگه داشته‌اند</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- محصول ویژه 1 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover-lift">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1585336261022-680e295ce3fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="مداد رنگی" class="w-full h-48 object-cover">
+                        <span class="absolute top-4 left-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">ویژه</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">ست مداد رنگی حرفه‌ای</h3>
+                        <p class="text-gray-600 mb-4">ست 36 رنگ مداد رنگی با کیفیت عالی برای طراحی و نقاشی حرفه‌ای</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-emerald-600">۱۲۹,۰۰۰ تومان</span>
+                            <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-300">
+                                <i class="fas fa-cart-plus ml-1"></i>
+                                افزودن
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- محصول ویژه 2 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover-lift">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="خودکار" class="w-full h-48 object-cover">
+                        <span class="absolute top-4 left-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">پرفروش</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">خودکار ژله‌ای لوکس</h3>
+                        <p class="text-gray-600 mb-4">خودکار ژله‌ای با نوک 0.7 میلی‌متر و طراحی ارگونومیک برای نوشتن راحت</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-emerald-600">۴۵,۰۰۰ تومان</span>
+                            <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-300">
+                                <i class="fas fa-cart-plus ml-1"></i>
+                                افزودن
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- محصول ویژه 3 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover-lift">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="دفتر" class="w-full h-48 object-cover">
+                        <span class="absolute top-4 left-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">جدید</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">دفتر یادداشت چرمی</h3>
+                        <p class="text-gray-600 mb-4">دفتر یادداشت با جلد چرمی طبیعی و کاغذ مرغوب برای نوشته‌های خاص شما</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-emerald-600">۸۹,۰۰۰ تومان</span>
+                            <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-300">
+                                <i class="fas fa-cart-plus ml-1"></i>
+                                افزودن
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-flex items-center bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-emerald-700 transition duration-300 hover-lift">
+                    مشاهده همه محصولات
+                    <i class="fas fa-arrow-left mr-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش مزایا -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="bg-emerald-100 text-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shipping-fast text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">ارسال رایگان</h3>
+                    <p class="text-gray-600">برای خریدهای بالای ۲۰۰ هزار تومان، ارسال رایگان داریم</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-emerald-100 text-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-undo text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">بازگشت ۷ روزه</h3>
+                    <p class="text-gray-600">در صورت عدم رضایت، تا ۷ روز امکان بازگرداندن کالا را دارید</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-emerald-100 text-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-headset text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">پشتیبانی ۲۴/۷</h3>
+                    <p class="text-gray-600">پشتیبانی آنلاین ما همیشه در دسترس شماست</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

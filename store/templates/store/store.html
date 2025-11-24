@@ -1,0 +1,246 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}محصولات - سبز استور{% endblock %}
+
+{% block content %}
+    <!-- بخش اصلی محصولات -->
+    <main class="py-8">
+        <div class="container mx-auto px-4">
+            <!-- هدر صفحه محصولات -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">محصولات</h1>
+                    <p class="text-gray-600 mt-2">لیست کامل محصولات با قابلیت فیلتر پیشرفته</p>
+                </div>
+                
+                <div class="flex items-center space-x-4 space-x-reverse mt-4 md:mt-0">
+                    <div class="flex items-center">
+                        <span class="text-gray-700 ml-2">مرتب‌سازی:</span>
+                        <select class="bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option>پربازدیدترین</option>
+                            <option>پرفروش‌ترین</option>
+                            <option>جدیدترین</option>
+                            <option>ارزان‌ترین</option>
+                            <option>گران‌ترین</option>
+                        </select>
+                    </div>
+                    
+                    <button id="filterToggle" class="filter-toggle bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center">
+                        <i class="fas fa-filter ml-2"></i>
+                        فیلترها
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- بخش فیلترها -->
+                <div class="filter-section md:w-1/4 bg-white rounded-xl shadow-lg p-6 h-fit">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">فیلتر محصولات</h2>
+                        <button id="closeFilter" class="filter-toggle md:hidden text-gray-500">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- فیلتر دسته‌بندی -->
+                    <div class="mb-6">
+                        <h3 class="font-bold text-gray-700 mb-3">دسته‌بندی</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="cat1" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="cat1" class="mr-2 text-gray-700 cursor-pointer">مداد و خودکار</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="cat2" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="cat2" class="mr-2 text-gray-700 cursor-pointer">دفتر و کاغذ</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="cat3" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="cat3" class="mr-2 text-gray-700 cursor-pointer">رنگ و نقاشی</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="cat4" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="cat4" class="mr-2 text-gray-700 cursor-pointer">قیچی و برش</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="cat5" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="cat5" class="mr-2 text-gray-700 cursor-pointer">خط‌کش و اندازه‌گیری</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- فیلتر برند -->
+                    <div class="mb-6">
+                        <h3 class="font-bold text-gray-700 mb-3">برند</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="brand1" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="brand1" class="mr-2 text-gray-700 cursor-pointer">فابر کاستل</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="brand2" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="brand2" class="mr-2 text-gray-700 cursor-pointer">استدلر</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="brand3" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="brand3" class="mr-2 text-gray-700 cursor-pointer">پنتل</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="brand4" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="brand4" class="mr-2 text-gray-700 cursor-pointer">پارکر</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="brand5" class="rounded text-emerald-600 focus:ring-emerald-500">
+                                <label for="brand5" class="mr-2 text-gray-700 cursor-pointer">مونامی</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- فیلتر قیمت -->
+                    <div class="mb-6">
+                        <h3 class="font-bold text-gray-700 mb-3">محدوده قیمت</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between text-sm text-gray-600">
+                                <span id="minPrice">۰ تومان</span>
+                                <span id="maxPrice">۵۰۰,۰۰۰ تومان</span>
+                            </div>
+                            <input type="range" min="0" max="500000" value="500000" step="10000" class="price-slider" id="priceRange">
+                        </div>
+                    </div>
+                    
+                    <!-- فیلتر وضعیت موجودی -->
+                    <div class="mb-6">
+                        <h3 class="font-bold text-gray-700 mb-3">وضعیت موجودی</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="stock1" class="rounded text-emerald-600 focus:ring-emerald-500" checked>
+                                <label for="stock1" class="mr-2 text-gray-700 cursor-pointer">فقط کالاهای موجود</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- دکمه‌های اعمال و بازنشانی فیلتر -->
+                    <div class="flex space-x-3 space-x-reverse">
+                        <button class="flex-1 bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 transition duration-300">
+                            اعمال فیلتر
+                        </button>
+                        <button class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition duration-300">
+                            بازنشانی
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- بخش محصولات -->
+                <div class="md:w-3/4">
+                    <!-- اطلاعات نمایش -->
+                    <div class="flex justify-between items-center mb-6">
+                        {% if query %}
+                            <p class="text-gray-600 mb-4">
+                                نتیجه جستجو برای: <span class="font-bold text-emerald-600">{{ query }}</span>
+                            </p>
+                        {% endif %}
+
+                        
+                        <div class="flex items-center">
+                            <span class="text-gray-700 ml-2">نمایش:</span>
+                            <select class="bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option>۱۲ محصول</option>
+                                <option>۲۴ محصول</option>
+                                <option>۴۸ محصول</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- لیست محصولات -->
+                    <div id="productsContainer" class="product-grid">
+                        {% for product in products %}
+                            <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift">
+                                <div class="relative">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                                    {% else %}
+                                        <img src="{% static 'images/default.png' %}" alt="No image" class="w-full h-48 object-cover">
+                                    {% endif %}
+                                </div>
+
+                                <div class="p-4">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-2">{{ product.name }}</h3>
+                                    <p class="text-gray-600 text-sm mb-3">{{ product.description|truncatechars:30 }}</p>
+
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-lg font-bold text-emerald-600">
+                                            {{ product.price }} تومان
+                                        </span>
+
+                                        <button class="bg-emerald-600 text-white px-3 py-1 rounded-lg hover:bg-emerald-700 transition duration-300 text-sm">
+                                            <i class="fas fa-cart-plus ml-1"></i>
+                                            افزودن
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-gray-600 text-center col-span-full">
+                                هیچ محصولی یافت نشد.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+            </div>
+        </div>
+    </main>
+    
+    <!-- Overlay برای موبایل -->
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+        // مدیریت فیلتر در موبایل
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterToggle = document.getElementById('filterToggle');
+            const closeFilter = document.getElementById('closeFilter');
+            const filterSection = document.querySelector('.filter-section');
+            const overlay = document.getElementById('overlay');
+            
+            filterToggle.addEventListener('click', function() {
+                filterSection.classList.add('active');
+                overlay.classList.add('active');
+            });
+            
+            closeFilter.addEventListener('click', function() {
+                filterSection.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                filterSection.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // مدیریت اسلایدر قیمت
+            const priceRange = document.getElementById('priceRange');
+            const maxPrice = document.getElementById('maxPrice');
+            
+            priceRange.addEventListener('input', function() {
+                const value = parseInt(this.value).toLocaleString('fa-IR');
+                maxPrice.textContent = value + ' تومان';
+            });
+            
+            // شبیه‌سازی بارگذاری بیشتر محصولات
+            const loadMoreBtn = document.getElementById('loadMore');
+            const productsContainer = document.getElementById('productsContainer');
+            
+            loadMoreBtn.addEventListener('click', function() {
+                // در حالت واقعی اینجا درخواست AJAX به سرور ارسال می‌شود
+                // برای نمونه، پیامی نمایش می‌دهیم
+                loadMoreBtn.innerHTML = 'در حال بارگذاری... <i class="fas fa-spinner fa-spin mr-2"></i>';
+                
+                setTimeout(function() {
+                    // شبیه‌سازی بارگذاری محصولات جدید
+                    loadMoreBtn.innerHTML = 'بارگذاری محصولات بیشتر <i class="fas fa-arrow-down mr-2"></i>';
+                    alert('محصولات بیشتری بارگذاری شد! (در نسخه واقعی، محصولات جدید به صفحه اضافه می‌شوند)');
+                }, 1500);
+            });
+        });
+    </script>
+{% endblock %}
