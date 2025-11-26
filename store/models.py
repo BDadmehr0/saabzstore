@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.text import slugify
 from PIL import Image
 
+
 # -----------------------------
 # مسیر ذخیره تصویر محصول
 # -----------------------------
@@ -73,7 +74,11 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=0)
     image = models.ImageField(upload_to=product_image_path, blank=True, null=True)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="products"
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
     )
     brand = models.ForeignKey(
         Brand, on_delete=models.SET_NULL, null=True, blank=True, related_name="products"
