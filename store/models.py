@@ -86,6 +86,7 @@ class Product(models.Model):
     )
     inventory = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_special = models.BooleanField(default=False, verbose_name="محصول ویژه")
 
     class Meta:
         verbose_name_plural = "محصولات"

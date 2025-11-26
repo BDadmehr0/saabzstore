@@ -1,12 +1,20 @@
 <header class="sticky top-0 z-50">
-    <div class="hero-gradient text-white">
+    <div class="bg-[#fdfef9] text-gray-800">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
 
-            <!-- لوگو -->
-            <h1 class="text-2xl font-bold">سبز استور</h1>
+            <!-- لوگو + نام سایت -->
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <img src="/static/images/logo.png" alt="Logo" class="w-10 h-10 object-contain">
+
+                <h1 class="text-2xl font-bold">
+                    <a href="{% url 'index' %}" class="site-gradient-text font-medium">
+                        پاپل بار
+                    </a>
+                </h1>
+            </div>
 
             <!-- ناوبری دسکتاپ -->
-            <nav class="hidden md:flex items-center space-x-6 space-x-reverse text-sm">
+            <nav class="hidden md:flex items-center space-x-6 space-x-reverse text-base">
                 <a href="{% url 'index' %}" class="hover:text-emerald-200 font-medium">خانه</a>
                 <a href="{% url 'store' %}" class="hover:text-emerald-200 font-medium">محصولات</a>
                 <a href="#" class="hover:text-emerald-200 font-medium">دسته‌بندی‌ها</a>
@@ -60,7 +68,7 @@
 <div id="searchModal"
      class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden justify-center items-center z-50">
 
-    <div class="bg-white w-11/12 max-w-sm rounded-2xl p-5 shadow-xl animate-fadeIn">
+    <div class="bg-[#fdfef9] w-11/12 max-w-sm rounded-2xl p-5 shadow-xl animate-fadeIn">
 
         <h2 class="text-right text-gray-800 font-semibold mb-3">جستجوی محصول</h2>
 

@@ -2,13 +2,24 @@
 from django.core.paginator import EmptyPage, Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.db.models import Count
 
 from .models import Brand, Category, Product
 
+import random
 
 def index(request):
-    products = Product.objects.all()[:8]
-    return render(request, "store/index.html", {"products": products})
+    special_products = list(Product.objects.filter(is_special=True))
+
+    # اگر بیشتر از 3 تا بود → تصادفی ۳ تا انتخاب کن
+    if len(special_products) > 3:
+        special_products = random.sample(special_products, 3)
+
+    context = {
+        "special_products": special_products,
+    }
+    return render(request, "store/index.html", context)
+
 
 
 def store(request):

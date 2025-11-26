@@ -1,23 +1,88 @@
-<footer class="bg-gray-800 text-white py-12">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<footer class="relative overflow-hidden bg-[#065f46] text-white pt-20 pb-10">
+
+    <!-- نورهای حجمی پس‌زمینه -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute -top-32 -right-20 w-96 h-96 bg-emerald-300/20 rounded-full blur-[120px]"></div>
+        <div class="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[140px]"></div>
+    </div>
+
+    <!-- شبکه سه‌بعدی -->
+    <div class="absolute inset-0 opacity-[0.08]">
+        <div class="absolute inset-0 animate-footer-grid"></div>
+    </div>
+
+    <!-- خطوط نئونی افقی -->
+    <div class="absolute w-[200%] h-[3px] bg-gradient-to-r from-transparent via-emerald-300 to-transparent top-1/3 animate-neon-line"></div>
+    <div class="absolute w-[200%] h-[3px] bg-gradient-to-r from-transparent via-emerald-200 to-transparent top-2/3 animate-neon-line-fast"></div>
+
+    <!-- گوی نورانی پالس‌دار -->
+    <div class="absolute left-1/2 top-[40%] -translate-x-1/2">
+        <div class="w-40 h-40 rounded-full bg-emerald-400/40 blur-3xl animate-pulse-fast"></div>
+    </div>
+
+    <div class="container relative z-10 mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+
+            <!-- ستون 1 -->
             <div>
-                <div class="flex items-center mb-4">
-                    <i class="fas fa-pencil-alt text-emerald-400 text-2xl ml-2"></i>
-                    <h3 class="text-xl font-bold">SaabzStore</h3>
+                <div class="flex items-center mb-4 space-x-3 space-x-reverse">
+                    <img src="/static/images/logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                    <h3 class="text-2xl font-bold tracking-tight">پاپل بار</h3>
                 </div>
-                <p class="text-gray-400">فروشگاه تخصصی لوازم تحریر با بیش از ۱۰ سال سابقه</p>
+                <p class="text-gray-200 leading-relaxed text-sm">
+                    فروشگاه تخصصی لوازم تحریر با بیش از ۱۰ سال سابقه  
+                    ارائه‌دهنده محصولات خاص برای افراد خاص.
+                </p>
             </div>
+
+            <!-- ستون 2 -->
             <div>
                 <h4 class="text-lg font-bold mb-4">دسترسی سریع</h4>
-                <ul class="space-y-2 text-gray-400">
-                    <li><a href="#" class="hover:text-white">خانه</a></li>
-                    <li><a href="#" class="hover:text-white">محصولات</a></li>
+                <ul class="space-y-2 text-gray-200">
+                    <li><a href="#" class="hover:text-white transition">خانه</a></li>
+                    <li><a href="#" class="hover:text-white transition">محصولات</a></li>
+                    <li><a href="#" class="hover:text-white transition">تماس با ما</a></li>
                 </ul>
             </div>
+
+            <!-- ستون 3 -->
+            <div>
+                <h4 class="text-lg font-bold mb-4">پشتیبانی</h4>
+                <ul class="space-y-2 text-gray-200">
+                    <li><a href="#" class="hover:text-white">سوالات متداول</a></li>
+                    <li><a href="#" class="hover:text-white">پیگیری سفارش</a></li>
+                    <li><a href="#" class="hover:text-white">قوانین و مقررات</a></li>
+                </ul>
+            </div>
+
+            <!-- ستون 4 -->
+            <div>
+                <h4 class="text-lg font-bold mb-4">راه‌های ارتباطی</h4>
+                <ul class="space-y-4 text-gray-200">
+
+                    <li class="flex items-center gap-2">
+                        <i class="fa-solid fa-phone text-white"></i>
+                        <span>021-12345678</span>
+                    </li>
+
+                    <li class="flex items-center gap-2">
+                        <i class="fa-solid fa-envelope text-white"></i>
+                        <span>papelbar.ir@gmail.com</span>
+                    </li>
+
+                    <li class="flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-white"></i>
+                        <span>تهران، خیابان…</span>
+                    </li>
+
+                </ul>
+            </div>
+
         </div>
-        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>کلیه حقوق این وبسایت متعلق به SaabzStore می‌باشد. © ۲۰۲۳</p>
+
+        <!-- Copyright -->
+        <div class="border-t border-white/20 mt-10 pt-6 text-center text-gray-200 text-sm">
+            کلیه حقوق این وبسایت متعلق به papelbar.ir می‌باشد. © ۲۰۲۵
         </div>
     </div>
 </footer>
