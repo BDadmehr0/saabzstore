@@ -9,6 +9,8 @@ urlpatterns = [
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
     path("store/", views.store, name="store"),
+    path("category/<str:slug>/", views.category_view, name="category"),
+
     # API endpoint AJAX
     path("api/products/", views.api_products, name="api_products"),
 ]

@@ -172,3 +172,16 @@ def api_products(request):
         },
     }
     return JsonResponse(data)
+
+def category_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+
+    return render(
+        request,
+        "store/category.html",
+        {
+            "category": category,
+            "products": products,
+        }
+    )
