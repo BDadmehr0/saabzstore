@@ -8,90 +8,90 @@
     <!-- Breadcrumb -->
     <nav class="mb-6">
       <ol class="flex items-center space-x-2 text-sm text-gray-500">
-
-        <!-- صفحه اصلی فروشگاه -->
         <li>
           <a href="{% url 'store' %}" class="hover:text-emerald-600 transition">
             فروشگاه
           </a>
         </li>
-
         <li><i class="fas fa-chevron-left text-xs"></i></li>
-
         {% if product.category %}
-          <!-- دسته‌بندی -->
           <li>
-            <a href="{% url 'store:category' product.category.slug %}" 
+            <a href="{% url 'category' product.category.slug %}" 
               class="hover:text-emerald-600 transition">
               {{ product.category.name }}
             </a>
           </li>
-
           <li><i class="fas fa-chevron-left text-xs"></i></li>
         {% endif %}
-
-        <!-- نام محصول -->
         <li class="text-gray-800 font-medium truncate">
           {{ product.name }}
         </li>
-
       </ol>
     </nav>
 
-
     <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Product Images -->
+      <!-- Product Images - Improved Section -->
       <div class="lg:w-1/2">
         <div class="bg-white rounded-2xl shadow-lg p-4 sticky top-4">
-          <!-- Main Image -->
-          <div class="mb-4">
-            {% if product.image %}
-              <img id="main-image" src="{{ product.image.url }}" alt="{{ product.name }}" 
-                   class="w-full h-96 object-cover rounded-xl transition duration-300">
-            {% else %}
-              <img id="main-image" src="{% static 'images/default.png' %}" alt="No image" 
-                   class="w-full h-96 object-cover rounded-xl">
-            {% endif %}
+          <!-- Main Image Container with proper aspect ratio -->
+          <div class="mb-4 bg-gray-50 rounded-xl overflow-hidden">
+            <div class="relative aspect-square flex items-center justify-center">
+              {% if product.image %}
+                <img id="main-image" src="{{ product.image.url }}" alt="{{ product.name }}" 
+                     class="w-full h-full object-contain p-4 transition duration-300">
+              {% else %}
+                <img id="main-image" src="{% static 'images/default.png' %}" alt="No image" 
+                     class="w-full h-full object-contain p-4">
+              {% endif %}
+            </div>
           </div>
           
-          <!-- Thumbnail Gallery -->
-          <div class="flex space-x-3 overflow-x-auto pb-2">
-            {% if product.image %}
-              <div class="flex-shrink-0">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" 
-                     class="thumbnail w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-emerald-500">
-              </div>
-            {% endif %}
-            {% if product.image_2 %}
-              <div class="flex-shrink-0">
-                <img src="{{ product.image_2.url }}" alt="{{ product.name }}" 
-                     class="thumbnail w-20 h-20 object-cover rounded-lg cursor-pointer border border-gray-200 hover:border-emerald-500">
-              </div>
-            {% endif %}
-            {% if product.image_3 %}
-              <div class="flex-shrink-0">
-                <img src="{{ product.image_3.url }}" alt="{{ product.name }}" 
-                     class="thumbnail w-20 h-20 object-cover rounded-lg cursor-pointer border border-gray-200 hover:border-emerald-500">
-              </div>
-            {% endif %}
-            {% if product.image_4 %}
-              <div class="flex-shrink-0">
-                <img src="{{ product.image_4.url }}" alt="{{ product.name }}" 
-                     class="thumbnail w-20 h-20 object-cover rounded-lg cursor-pointer border border-gray-200 hover:border-emerald-500">
-              </div>
-            {% endif %}
+          <!-- Thumbnail Gallery with improved layout -->
+          {% if product.image_2 or product.image_3 or product.image_4 %}
+          <div class="mb-6">
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">تصاویر محصول:</h3>
+            <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-thin">
+              {% if product.image %}
+                <div class="flex-shrink-0">
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                       class="thumbnail w-16 h-16 object-cover rounded-lg cursor-pointer border-2 border-emerald-500 hover:border-emerald-600 transition">
+                </div>
+              {% endif %}
+              {% if product.image_2 %}
+                <div class="flex-shrink-0">
+                  <img src="{{ product.image_2.url }}" alt="{{ product.name }}" 
+                       class="thumbnail w-16 h-16 object-cover rounded-lg cursor-pointer border border-gray-200 hover:border-emerald-500 transition">
+                </div>
+              {% endif %}
+              {% if product.image_3 %}
+                <div class="flex-shrink-0">
+                  <img src="{{ product.image_3.url }}" alt="{{ product.name }}" 
+                       class="thumbnail w-16 h-16 object-cover rounded-lg cursor-pointer border border-gray-200 hover:border-emerald-500 transition">
+                </div>
+              {% endif %}
+              {% if product.image_4 %}
+                <div class="flex-shrink-0">
+                  <img src="{{ product.image_4.url }}" alt="{{ product.name }}" 
+                       class="thumbnail w-16 h-16 object-cover rounded-lg cursor-pointer border border-gray-200 hover:border-emerald-500 transition">
+                </div>
+              {% endif %}
+            </div>
           </div>
+          {% endif %}
           
-          <!-- Product Actions -->
-          <div class="flex mt-6 space-x-3">
-            <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl transition flex items-center justify-center">
-              <i class="far fa-heart ml-2"></i> علاقه‌مندی
+          <!-- Product Actions with improved spacing -->
+          <div class="flex space-x-2">
+            <button class="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-3 rounded-xl transition flex items-center justify-center border border-gray-200">
+              <i class="far fa-heart ml-2 text-red-400"></i>
+              <span class="text-sm">علاقه‌مندی</span>
             </button>
-            <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl transition flex items-center justify-center">
-              <i class="fas fa-share-alt ml-2"></i> اشتراک‌گذاری
+            <button class="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-3 rounded-xl transition flex items-center justify-center border border-gray-200">
+              <i class="fas fa-share-alt ml-2 text-blue-500"></i>
+              <span class="text-sm">اشتراک</span>
             </button>
-            <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl transition flex items-center justify-center">
-              <i class="fas fa-chart-bar ml-2"></i> مقایسه
+            <button class="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-3 rounded-xl transition flex items-center justify-center border border-gray-200">
+              <i class="fas fa-chart-bar ml-2 text-purple-500"></i>
+              <span class="text-sm">مقایسه</span>
             </button>
           </div>
         </div>
@@ -100,145 +100,199 @@
       <!-- Product Details -->
       <div class="lg:w-1/2">
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+          <!-- Header with improved typography -->
           <div class="flex justify-between items-start mb-4">
-            <h1 class="text-3xl font-bold text-gray-800">{{ product.name }}</h1>
-            <div class="flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">
-              <i class="fas fa-star ml-1 text-yellow-500"></i>
-              <span>4.8 (124)</span>
+            <h1 class="text-2xl font-bold text-gray-800 leading-tight">
+              {{ product.name }}
+            </h1>
+            <div class="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-sm">
+              <i class="fas fa-star ml-1 text-amber-400"></i>
+              <span>4.8</span>
+              <span class="text-amber-500 mx-1">•</span>
+              <span>124 نظر</span>
             </div>
           </div>
           
-          <p class="text-gray-600 mb-6 leading-relaxed">{{ product.description }}</p>
+          <!-- Description with better readability -->
+          <div class="mb-6">
+            <p class="text-gray-600 leading-relaxed" id="product-description">
+              {% if product.description|length > 200 %}
+                <span id="short-description">{{ product.description|slice:":200" }}...</span>
+                <span id="full-description" class="hidden">{{ product.description|slice:"200:" }}</span>
+                <button id="show-more" class="text-emerald-600 hover:text-emerald-700 font-semibold text-sm mt-2 transition">
+                  مشاهده بیشتر
+                </button>
+                <button id="show-less" class="text-emerald-600 hover:text-emerald-700 font-semibold text-sm mt-2 hidden transition">
+                  مشاهده کمتر
+                </button>
+              {% else %}
+                {{ product.description }}
+              {% endif %}
+            </p>
+          </div>
 
-          <!-- Product Meta -->
-          <div class="space-y-4 mb-6">
-            <div class="flex items-center">
-              <span class="text-gray-700 w-32">دسته‌بندی:</span>
+          <!-- Product Meta with improved spacing -->
+          <div class="space-y-3 mb-6">
+            <div class="flex items-center py-2 border-b border-gray-100">
+              <span class="text-gray-600 w-28 text-sm">دسته‌بندی</span>
               {% if product.category %}
-                <a href="{% url 'store:category' product.category.slug %}" class="text-emerald-600 font-semibold hover:text-emerald-700 transition">
+                <a href="{% url 'category' product.category.slug %}" class="text-emerald-600 font-medium hover:text-emerald-700 transition text-sm">
                   {{ product.category.name }}
                 </a>
               {% else %}
-                <span class="text-gray-500">ندارد</span>
+                <span class="text-gray-400 text-sm">ندارد</span>
               {% endif %}
             </div>
 
-            <div class="flex items-center">
-              <span class="text-gray-700 w-32">برند:</span>
+            <div class="flex items-center py-2 border-b border-gray-100">
+              <span class="text-gray-600 w-28 text-sm">برند</span>
               {% if product.brand %}
-                <a href="{% url 'store:brand' product.brand.slug %}" class="text-emerald-600 font-semibold hover:text-emerald-700 transition">
+                <a href="{% url 'brand' product.brand.slug %}" class="text-emerald-600 font-medium hover:text-emerald-700 transition text-sm">
                   {{ product.brand.name }}
                 </a>
               {% else %}
-                <span class="text-gray-500">ندارد</span>
+                <span class="text-gray-400 text-sm">ندارد</span>
               {% endif %}
             </div>
 
-            <div class="flex items-center">
-              <span class="text-gray-700 w-32">کد محصول:</span>
-              <span class="text-gray-800 font-mono">{{ product.sku|default:"-" }}</span>
+            <div class="flex items-center py-2 border-b border-gray-100">
+              <span class="text-gray-600 w-28 text-sm">کد محصول</span>
+              <span class="text-gray-800 font-mono text-sm bg-gray-50 px-2 py-1 rounded">{{ product.id|default:"-" }}</span>
             </div>
           </div>
 
-          <!-- Price Section -->
-          <div class="bg-gray-50 rounded-xl p-4 mb-6">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-lg text-gray-700">قیمت:</span>
-              {% if product.discount_price %}
-                <div class="flex items-center">
-                  <span class="text-2xl font-bold text-emerald-600">{{ product.discount_price|toman }} تومان</span>
-                  <span class="text-lg text-gray-500 line-through mr-3">{{ product.price|toman }} تومان</span>
-                  <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">{{ product.discount_percent }}%</span>
-                </div>
-              {% else %}
-                <span class="text-2xl font-bold text-emerald-600">{{ product.price|toman }} تومان</span>
-              {% endif %}
+          <!-- Price Section with better visual hierarchy -->
+          <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-5 mb-6 border border-emerald-100">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-lg font-semibold text-gray-700">قیمت:</span>
+              <div class="flex items-center gap-3">
+                {% if product.discount_price %}
+                  <div class="flex flex-col items-end">
+                    <span id="unit-price" class="text-2xl font-bold text-emerald-600" data-price="{{ product.discount_price }}">
+                      {{ product.discount_price|toman }} تومان
+                    </span>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="text-lg text-gray-500 line-through">{{ product.price|toman }}</span>
+                      <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">{{ product.discount_percent }}%</span>
+                    </div>
+                  </div>
+                {% else %}
+                  <span id="unit-price" class="text-2xl font-bold text-emerald-600" data-price="{{ product.price }}">
+                    {{ product.price|toman }} تومان
+                  </span>
+                {% endif %}
+              </div>
             </div>
             
-            <div class="flex items-center justify-between">
-              <span class="text-gray-700">موجودی:</span>
+            <div class="flex items-center justify-between pt-3 border-t border-emerald-100">
+              <span class="text-gray-600 text-sm">موجودی:</span>
               {% if product.inventory > 0 %}
                 <div class="flex items-center">
-                  <span class="text-green-600 font-semibold">موجود در انبار</span>
+                  <div class="w-2 h-2 bg-green-500 rounded-full ml-2"></div>
+                  <span class="text-green-600 font-medium text-sm">موجود در انبار</span>
                   <span class="text-gray-500 text-sm mr-2">({{ product.inventory }} عدد)</span>
                 </div>
               {% else %}
-                <span class="text-red-600 font-semibold">ناموجود</span>
+                <div class="flex items-center">
+                  <div class="w-2 h-2 bg-red-500 rounded-full ml-2"></div>
+                  <span class="text-red-600 font-medium text-sm">ناموجود</span>
+                </div>
               {% endif %}
             </div>
           </div>
 
-          <!-- Variants (if any) -->
+          <!-- Variants with improved styling -->
           {% if product.variants.exists %}
           <div class="mb-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-3">انتخاب گزینه:</h3>
             <div class="flex flex-wrap gap-2">
               {% for variant in product.variants.all %}
-                <button class="variant-btn border border-gray-300 hover:border-emerald-500 rounded-lg px-4 py-2 transition 
-                              {% if variant.inventory == 0 %} opacity-50 cursor-not-allowed {% endif %}"
+                <button class="variant-btn border-2 border-gray-200 hover:border-emerald-400 rounded-xl px-4 py-3 transition-all duration-200 
+                              {% if variant.inventory == 0 %} opacity-40 cursor-not-allowed grayscale {% else %} hover:shadow-md {% endif %}"
                         data-variant-id="{{ variant.id }}" 
                         data-price="{{ variant.price }}" 
                         data-inventory="{{ variant.inventory }}"
                         {% if variant.inventory == 0 %} disabled {% endif %}>
-                  {{ variant.name }}
+                  <span class="font-medium text-gray-700">{{ variant.name }}</span>
+                  {% if variant.inventory > 0 %}
+                    <span class="text-xs text-emerald-600 block mt-1">{{ variant.price|toman }} تومان</span>
+                  {% else %}
+                    <span class="text-xs text-red-500 block mt-1">ناموجود</span>
+                  {% endif %}
                 </button>
               {% endfor %}
             </div>
           </div>
           {% endif %}
 
-          <!-- Quantity & Add to Cart -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
-            <div class="flex items-center border border-gray-300 rounded-xl overflow-hidden">
-              <button class="quantity-btn w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition" data-action="decrease">
-                <i class="fas fa-minus"></i>
-              </button>
-              <input type="number" id="quantity" value="1" min="1" max="{{ product.inventory }}" 
-                     class="w-12 text-center border-0 focus:ring-0">
-              <button class="quantity-btn w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition" data-action="increase">
-                <i class="fas fa-plus"></i>
-              </button>
+          <!-- Quantity & Add to Cart with improved layout -->
+          <div class="mb-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div class="flex items-center border border-gray-300 rounded-xl overflow-hidden bg-white">
+                <button class="quantity-btn w-12 h-12 flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition" data-action="decrease">
+                  <i class="fas fa-minus text-gray-600"></i>
+                </button>
+                <input type="number" id="quantity" value="1" min="1" max="{{ product.inventory }}" 
+                      class="w-16 text-center border-0 focus:ring-0 text-lg font-medium">
+                <button class="quantity-btn w-12 h-12 flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition" data-action="increase">
+                  <i class="fas fa-plus text-gray-600"></i>
+                </button>
+              </div>
+              
+              {% if product.inventory > 0 %}
+                <button id="add-to-cart" class="flex-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-8 py-4 rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl">
+                  <i class="fas fa-cart-plus ml-3 text-lg"></i>
+                  <span class="font-semibold text-lg">افزودن به سبد خرید</span>
+                </button>
+              {% else %}
+                <button class="flex-1 bg-gray-400 text-white px-8 py-4 rounded-xl cursor-not-allowed shadow" disabled>
+                  <span class="font-semibold text-lg">ناموجود</span>
+                </button>
+              {% endif %}
             </div>
             
-            {% if product.inventory > 0 %}
-              <button id="add-to-cart" class="flex-1 bg-emerald-600 text-white px-6 py-3 rounded-xl hover:bg-emerald-700 transition duration-300 flex items-center justify-center">
-                <i class="fas fa-cart-plus ml-2"></i> افزودن به سبد خرید
-              </button>
-            {% else %}
-              <button class="flex-1 bg-gray-400 text-white px-6 py-3 rounded-xl cursor-not-allowed" disabled>
-                ناموجود
-              </button>
-            {% endif %}
+            <!-- Total Price Display -->
+            <div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+              <div class="flex justify-between items-center">
+                <span class="text-blue-700 font-medium">قیمت کل:</span>
+                <span id="total-price" class="text-xl font-bold text-blue-700">
+                  {{ product.discount_price|default:product.price|toman }} تومان
+                </span>
+              </div>
+            </div>
           </div>
-          
-          <!-- Guarantees -->
-          <div class="flex flex-wrap gap-4 text-sm text-gray-600">
-            <div class="flex items-center">
-              <i class="fas fa-shield-alt text-emerald-600 ml-2"></i>
-              <span>گارانتی 18 ماهه</span>
+
+          <!-- Guarantees with improved icons -->
+          <div class="flex flex-wrap gap-4 text-sm">
+            <div class="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+              <i class="fas fa-shield-alt text-emerald-500 ml-2"></i>
+              <span class="text-gray-700">گارانتی 18 ماهه</span>
             </div>
-            <div class="flex items-center">
-              <i class="fas fa-truck text-emerald-600 ml-2"></i>
-              <span>ارسال رایگان</span>
+            <div class="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+              <i class="fas fa-truck text-blue-500 ml-2"></i>
+              <span class="text-gray-700">ارسال رایگان</span>
             </div>
-            <div class="flex items-center">
-              <i class="fas fa-undo-alt text-emerald-600 ml-2"></i>
-              <span>بازگشت 7 روزه</span>
+            <div class="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+              <i class="fas fa-undo-alt text-purple-500 ml-2"></i>
+              <span class="text-gray-700">بازگشت 7 روزه</span>
             </div>
           </div>
         </div>
         
-        <!-- Product Tabs -->
+        <!-- Product Tabs with improved design -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div class="border-b">
+          <div class="border-b border-gray-200">
             <nav class="flex -mb-px">
-              <button class="tab-btn active py-4 px-6 text-center border-b-2 border-emerald-500 text-emerald-600 font-medium" data-tab="details">
+              <button class="tab-btn active py-4 px-6 text-center border-b-2 border-emerald-500 text-emerald-600 font-semibold transition-colors" data-tab="details">
+                <i class="fas fa-list-alt ml-2"></i>
                 مشخصات فنی
               </button>
-              <button class="tab-btn py-4 px-6 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium" data-tab="reviews">
+              <button class="tab-btn py-4 px-6 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium transition-colors" data-tab="reviews">
+                <i class="fas fa-comments ml-2"></i>
                 نظرات (24)
               </button>
-              <button class="tab-btn py-4 px-6 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium" data-tab="questions">
+              <button class="tab-btn py-4 px-6 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium transition-colors" data-tab="questions">
+                <i class="fas fa-question-circle ml-2"></i>
                 پرسش و پاسخ
               </button>
             </nav>
@@ -246,27 +300,28 @@
           
           <div class="p-6">
             <div id="tab-details" class="tab-content active">
-              <table class="w-full">
-                <tbody>
+              {% if product.specifications.all %}
+                <div class="space-y-3">
                   {% for spec in product.specifications.all %}
-                  <tr class="border-b border-gray-200">
-                    <td class="py-3 text-gray-700 font-medium">{{ spec.name }}</td>
-                    <td class="py-3 text-gray-600">{{ spec.value }}</td>
-                  </tr>
-                  {% empty %}
-                  <tr>
-                    <td colspan="2" class="py-4 text-center text-gray-500">مشخصاتی برای این محصول ثبت نشده است.</td>
-                  </tr>
+                  <div class="flex justify-between items-center py-3 border-b border-gray-100 last:border-0">
+                    <span class="text-gray-700 font-medium">{{ spec.name }}</span>
+                    <span class="text-gray-600">{{ spec.value }}</span>
+                  </div>
                   {% endfor %}
-                </tbody>
-              </table>
+                </div>
+              {% else %}
+                <div class="text-center py-8 text-gray-500">
+                  <i class="fas fa-info-circle text-4xl mb-3 text-gray-300"></i>
+                  <p>مشخصاتی برای این محصول ثبت نشده است.</p>
+                </div>
+              {% endif %}
             </div>
             
             <div id="tab-reviews" class="tab-content hidden">
               <div class="text-center py-8 text-gray-500">
                 <i class="fas fa-comments text-4xl mb-3 text-gray-300"></i>
-                <p>هنوز نظری برای این محصول ثبت نشده است.</p>
-                <button class="mt-4 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
+                <p class="mb-4">هنوز نظری برای این محصول ثبت نشده است.</p>
+                <button class="bg-emerald-600 text-white px-6 py-3 rounded-xl hover:bg-emerald-700 transition font-semibold">
                   اولین نظر را بنویسید
                 </button>
               </div>
@@ -275,8 +330,8 @@
             <div id="tab-questions" class="tab-content hidden">
               <div class="text-center py-8 text-gray-500">
                 <i class="fas fa-question-circle text-4xl mb-3 text-gray-300"></i>
-                <p>هنوز پرسشی برای این محصول مطرح نشده است.</p>
-                <button class="mt-4 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
+                <p class="mb-4">هنوز پرسشی برای این محصول مطرح نشده است.</p>
+                <button class="bg-emerald-600 text-white px-6 py-3 rounded-xl hover:bg-emerald-700 transition font-semibold">
                   پرسش خود را مطرح کنید
                 </button>
               </div>
@@ -286,70 +341,39 @@
       </div>
     </div>
     
-    <!-- Related Products -->
+    <!-- Related Products with improved cards -->
     <section class="mt-12">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">محصولات مرتبط</h2>
-        <a href="#" class="text-emerald-600 hover:text-emerald-700 transition flex items-center">
+        <a href="#" class="text-emerald-600 hover:text-emerald-700 transition flex items-center font-semibold">
           مشاهده همه
           <i class="fas fa-arrow-left mr-2"></i>
         </a>
       </div>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Related product cards would go here -->
-        <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition">
-          <div class="h-48 bg-gray-200"></div>
+        {% for related_product in related_products|slice:":4" %}
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100">
+          <div class="h-48 bg-gray-100 flex items-center justify-center p-4">
+            {% if related_product.image %}
+              <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}" 
+                   class="h-full w-full object-contain">
+            {% else %}
+              <img src="{% static 'images/default.png' %}" alt="No image" 
+                   class="h-full w-full object-contain">
+            {% endif %}
+          </div>
           <div class="p-4">
-            <h3 class="font-semibold text-gray-800 mb-2">محصول مرتبط ۱</h3>
+            <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2">{{ related_product.name }}</h3>
             <div class="flex justify-between items-center">
-              <span class="text-emerald-600 font-bold">۲۹۰,۰۰۰ تومان</span>
-              <button class="text-gray-500 hover:text-emerald-600 transition">
+              <span class="text-emerald-600 font-bold text-lg">{{ related_product.price|toman }}</span>
+              <button class="text-gray-500 hover:text-emerald-600 transition bg-gray-100 hover:bg-emerald-50 w-10 h-10 rounded-full flex items-center justify-center">
                 <i class="fas fa-cart-plus"></i>
               </button>
             </div>
           </div>
         </div>
-        
-        <!-- Repeat 3 more times for demo -->
-        <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition">
-          <div class="h-48 bg-gray-200"></div>
-          <div class="p-4">
-            <h3 class="font-semibold text-gray-800 mb-2">محصول مرتبط ۲</h3>
-            <div class="flex justify-between items-center">
-              <span class="text-emerald-600 font-bold">۳۴۰,۰۰۰ تومان</span>
-              <button class="text-gray-500 hover:text-emerald-600 transition">
-                <i class="fas fa-cart-plus"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition">
-          <div class="h-48 bg-gray-200"></div>
-          <div class="p-4">
-            <h3 class="font-semibold text-gray-800 mb-2">محصول مرتبط ۳</h3>
-            <div class="flex justify-between items-center">
-              <span class="text-emerald-600 font-bold">۱۸۰,۰۰۰ تومان</span>
-              <button class="text-gray-500 hover:text-emerald-600 transition">
-                <i class="fas fa-cart-plus"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition">
-          <div class="h-48 bg-gray-200"></div>
-          <div class="p-4">
-            <h3 class="font-semibold text-gray-800 mb-2">محصول مرتبط ۴</h3>
-            <div class="flex justify-between items-center">
-              <span class="text-emerald-600 font-bold">۴۲۰,۰۰۰ تومان</span>
-              <button class="text-gray-500 hover:text-emerald-600 transition">
-                <i class="fas fa-cart-plus"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </section>
   </div>
@@ -358,128 +382,211 @@
 <!-- JavaScript for interactive elements -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Image gallery functionality
+  // Elements
   const mainImage = document.getElementById('main-image');
   const thumbnails = document.querySelectorAll('.thumbnail');
-  
-  thumbnails.forEach(thumb => {
-    thumb.addEventListener('click', function() {
-      // Update main image
-      mainImage.src = this.src;
-      
-      // Update active thumbnail
-      thumbnails.forEach(t => t.classList.remove('border-emerald-500'));
-      thumbnails.forEach(t => t.classList.add('border-gray-200'));
-      this.classList.remove('border-gray-200');
-      this.classList.add('border-emerald-500');
-    });
-  });
-  
-  // Quantity controls
   const quantityInput = document.getElementById('quantity');
   const quantityBtns = document.querySelectorAll('.quantity-btn');
-  
-  quantityBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const action = this.getAttribute('data-action');
-      let quantity = parseInt(quantityInput.value);
-      
-      if (action === 'increase') {
-        quantityInput.value = quantity + 1;
-      } else if (action === 'decrease' && quantity > 1) {
-        quantityInput.value = quantity - 1;
-      }
-    });
-  });
-  
-  // Tab functionality
+  const unitPriceElem = document.getElementById('unit-price');
+  const totalPriceElem = document.getElementById('total-price');
+  const variantBtns = document.querySelectorAll('.variant-btn');
   const tabBtns = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
-  
+  const showMoreBtn = document.getElementById('show-more');
+  const showLessBtn = document.getElementById('show-less');
+  const shortDescription = document.getElementById('short-description');
+  const fullDescription = document.getElementById('full-description');
+  const addToCartBtn = document.getElementById('add-to-cart');
+
+  let unitPrice = parseInt(unitPriceElem?.getAttribute('data-price')) || 0;
+
+  // Image Gallery
+  thumbnails.forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      mainImage.src = this.src;
+      thumbnails.forEach(t => {
+        t.classList.remove('border-emerald-500', 'border-2');
+        t.classList.add('border-gray-200');
+      });
+      this.classList.remove('border-gray-200');
+      this.classList.add('border-emerald-500', 'border-2');
+    });
+  });
+
+  // Tabs
   tabBtns.forEach(btn => {
     btn.addEventListener('click', function() {
       const tabId = this.getAttribute('data-tab');
       
       // Update active tab button
-      tabBtns.forEach(tab => tab.classList.remove('active', 'border-emerald-500', 'text-emerald-600'));
-      tabBtns.forEach(tab => tab.classList.add('border-transparent', 'text-gray-500'));
-      this.classList.add('active', 'border-emerald-500', 'text-emerald-600');
-      this.classList.remove('border-transparent', 'text-gray-500');
+      tabBtns.forEach(tab => {
+        tab.classList.remove('active', 'border-emerald-500', 'text-emerald-600', 'font-semibold');
+        tab.classList.add('border-transparent', 'text-gray-500', 'font-medium');
+      });
+      this.classList.add('active', 'border-emerald-500', 'text-emerald-600', 'font-semibold');
+      this.classList.remove('border-transparent', 'text-gray-500', 'font-medium');
       
       // Show active tab content
       tabContents.forEach(content => content.classList.add('hidden'));
-      tabContents.forEach(content => content.classList.remove('active'));
       document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-      document.getElementById(`tab-${tabId}`).classList.add('active');
     });
   });
-  
-  // Variant selection
-  const variantBtns = document.querySelectorAll('.variant-btn');
-  
+
+  // Description Toggle
+  if (showMoreBtn && showLessBtn) {
+    showMoreBtn.addEventListener('click', function() {
+      shortDescription.classList.add('hidden');
+      fullDescription.classList.remove('hidden');
+      showMoreBtn.classList.add('hidden');
+      showLessBtn.classList.remove('hidden');
+    });
+
+    showLessBtn.addEventListener('click', function() {
+      shortDescription.classList.remove('hidden');
+      fullDescription.classList.add('hidden');
+      showMoreBtn.classList.remove('hidden');
+      showLessBtn.classList.add('hidden');
+    });
+  }
+
+  // Variants
   variantBtns.forEach(btn => {
     btn.addEventListener('click', function() {
       if (!this.disabled) {
-        variantBtns.forEach(v => v.classList.remove('bg-emerald-100', 'border-emerald-500'));
-        this.classList.add('bg-emerald-100', 'border-emerald-500');
+        variantBtns.forEach(v => {
+          v.classList.remove('bg-emerald-50', 'border-emerald-400', 'shadow-md');
+        });
+        this.classList.add('bg-emerald-50', 'border-emerald-400', 'shadow-md');
+
+        unitPrice = parseInt(this.getAttribute('data-price'));
+        const inventory = parseInt(this.getAttribute('data-inventory'));
+        quantityInput.setAttribute('max', inventory);
         
-        // Update price and inventory based on variant
-        const price = this.getAttribute('data-price');
-        const inventory = this.getAttribute('data-inventory');
-        
-        // You would update the displayed price and inventory here
-        console.log(`Selected variant: ${price}, ${inventory}`);
+        if (parseInt(quantityInput.value) > inventory) {
+          quantityInput.value = inventory;
+        }
+
+        updateTotalPrice();
       }
     });
   });
-  
-  // Add to cart functionality
-  const addToCartBtn = document.getElementById('add-to-cart');
+
+  // Update Total Price
+  function updateTotalPrice() {
+    let quantity = parseInt(quantityInput.value);
+    const maxQty = parseInt(quantityInput.getAttribute('max')) || 1;
+
+    if (quantity < 1) quantity = 1;
+    if (quantity > maxQty) quantity = maxQty;
+    
+    quantityInput.value = quantity;
+
+    const totalPrice = (unitPrice * quantity).toLocaleString();
+    totalPriceElem.textContent = `${totalPrice} تومان`;
+  }
+
+  // Quantity Controls
+  quantityBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      let quantity = parseInt(quantityInput.value);
+      const action = this.getAttribute('data-action');
+
+      if (action === 'increase') quantity++;
+      if (action === 'decrease' && quantity > 1) quantity--;
+
+      const maxQty = parseInt(quantityInput.getAttribute('max')) || 1;
+      if (quantity > maxQty) quantity = maxQty;
+
+      quantityInput.value = quantity;
+      updateTotalPrice();
+    });
+  });
+
+  quantityInput.addEventListener('input', updateTotalPrice);
+  quantityInput.addEventListener('blur', function() {
+    if (this.value === '' || parseInt(this.value) < 1) {
+      this.value = 1;
+    }
+    updateTotalPrice();
+  });
+
+  // Add to Cart
   if (addToCartBtn) {
     addToCartBtn.addEventListener('click', function() {
       const quantity = quantityInput.value;
-      // You would send an AJAX request to add the product to cart here
       
       // Visual feedback
-      const originalText = this.innerHTML;
-      this.innerHTML = '<i class="fas fa-check ml-2"></i> افزوده شد به سبد';
-      this.classList.remove('bg-emerald-600');
-      this.classList.add('bg-green-600');
+      const originalHTML = this.innerHTML;
+      this.innerHTML = `
+        <i class="fas fa-check ml-3 text-lg"></i>
+        <span class="font-semibold text-lg">افزوده شد به سبد</span>
+      `;
+      this.classList.remove('from-emerald-500', 'to-green-500');
+      this.classList.add('from-green-500', 'to-emerald-500');
       
+      // Reset after 2 seconds
       setTimeout(() => {
-        this.innerHTML = originalText;
-        this.classList.remove('bg-green-600');
-        this.classList.add('bg-emerald-600');
+        this.innerHTML = originalHTML;
+        this.classList.remove('from-green-500', 'to-emerald-500');
+        this.classList.add('from-emerald-500', 'to-green-500');
       }, 2000);
     });
   }
+
+  // Initialize
+  updateTotalPrice();
 });
 </script>
 
 <style>
-/* Additional custom styles */
-.thumbnail {
-  transition: all 0.2s ease;
+/* Custom scrollbar */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
 }
 
-.tab-content {
-  animation: fadeIn 0.3s ease;
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
 }
 
-.sticky {
-  position: sticky;
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth transitions */
+.thumbnail, .tab-btn, .variant-btn, .quantity-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus styles */
 .quantity-btn:focus, 
 .variant-btn:focus, 
 .tab-btn:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+/* Sticky positioning */
+.sticky {
+  position: sticky;
+  top: 1rem;
 }
 </style>
 {% endblock %}
+
+
+
+

@@ -4,14 +4,24 @@
 [+] Complete All store fuatre
 [+] Format price given and taken iranian 
 [+] pre-commit Setup
-[] Product Image view have bug Fix it!
 [+] Improve header and footer and index
+[] product_detail.html ui/ux Improve(deepseek)
+    - [+] Breadcrumb
+    - [+] Javascript's
+    - [+] Image
+    - [+] Load more
+    - [] Comments => account
+    - [] Cart
+    - [] stars
+    - [] tab and some conetent center div
+[] sotre.html fix & add
+    - [] Product Image view have bug Fix it!
+    - [] avabile
+    - [] rate
+    - [] change default desc
 [] Improve admin panel ui ux
 [] Create account section
 [] Zarinpal payment
-[] sotre.html responsive
-[] product_detail.html ui/ux Improve(deepseek)
-    - [] Breadcrumb
 [] Create Email (papelbar.ir@gmail.com)
 [+] Special Product ?
 [] sortSelect backend ajax fix (live ajax)

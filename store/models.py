@@ -40,26 +40,27 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
 
-# -----------------------------
-# مدل برند
-# -----------------------------
+# -------------------------
+# Brand
+# -------------------------
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=120, unique=True, blank=True)
 
     class Meta:
-        verbose_name_plural = "برند ها"
+        verbose_name = "برند"
+        verbose_name_plural = "برندها"
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(self.name, allow_unicode=True)
-            slug = base_slug
+            base = slugify(self.name, allow_unicode=True)
+            slug = base
             counter = 1
             while Brand.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{counter}"
+                slug = f"{base}-{counter}"
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
@@ -163,3 +164,27 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} - {self.customer_name}"
+
+# -------------------------
+# Variant (for product.variants)
+# -------------------------
+class Variant(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
+    name = models.CharField(max_length=120)
+    price = models.PositiveIntegerField()
+    inventory = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.name}"
+
+
+# -------------------------
+# Specification (product.specifications)
+# -------------------------
+class Specification(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="specifications")
+    name = models.CharField(max_length=120)
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.name}: {self.value}"

@@ -52,7 +52,25 @@
                 </button>
 
                 <button class="p-2 rounded-full hover:bg-white/10">
-                    <i class="fas fa-user"></i>
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.is_staff %}
+                            <!-- ادمین → می‌رود به /admin -->
+                            <a href="/admin" class="p-2 rounded-full hover:bg-white/10">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        {% else %}
+                            <!-- کاربر معمولی → می‌رود به /dashboard -->
+                            <a href="/dashboard" class="p-2 rounded-full hover:bg-white/10">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <!-- مهمان → فرم ورود -->
+                        <a href="/accounts/login/" class="p-2 rounded-full hover:bg-white/10">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    {% endif %}
+
                 </button>
 
                 <!-- دکمه سرچ موبایل (جای برگر) -->

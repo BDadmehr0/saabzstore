@@ -10,7 +10,7 @@ urlpatterns = [
     path("checkout/", views.checkout, name="checkout"),
     path("store/", views.store, name="store"),
     path("category/<str:slug>/", views.category_view, name="category"),
-
+    path("brand/<str:slug>/", views.brand_view, name="brand"),
     # API endpoint AJAX
     path("api/products/", views.api_products, name="api_products"),
 ]
