@@ -185,3 +185,13 @@ def category_view(request, slug):
             "products": products,
         }
     )
+
+
+def brand_view(request, slug):
+    brand = get_object_or_404(Brand, slug=slug)
+    products = Product.objects.filter(brand=brand)
+
+    return render(request, "store/brand.html", {
+        "brand": brand,
+        "products": products
+    })
