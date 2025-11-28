@@ -2,36 +2,47 @@
 from django.core.paginator import EmptyPage, Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.db.models import Count
+from django.db.models import Q
 
 from .models import Brand, Category, Product
 
 import random
 
+
+# ---------------------------
+# صفحه اصلی (با محصولات ویژه)
+# ---------------------------
 def index(request):
     special_products = list(Product.objects.filter(is_special=True))
 
-    # اگر بیشتر از 3 تا بود → تصادفی ۳ تا انتخاب کن
+    # اگر بیشتر از ۳ تا محصول ویژه داریم → ۳ تا تصادفی نمایش بده
     if len(special_products) > 3:
         special_products = random.sample(special_products, 3)
 
-    context = {
-        "special_products": special_products,
-    }
-    return render(request, "store/index.html", context)
+    return render(request, "store/index.html", {"special_products": special_products})
 
 
-
+# ---------------------------
+# صفحه فروشگاه
+# ---------------------------
 def store(request):
     """
     صفحهٔ اصلی فروشگاه — قالب را رندر می‌کند.
-    خود فیلتر و لود محصولات از طریق AJAX انجام می‌شود، ولی برای سئو و fallback
-    می‌توانیم page اول را نیز از سرور رندر کنیم (اختیاری).
     """
     categories = Category.objects.all()
     brands = Brand.objects.all()
-    # initial products برای نمایش سروری (صفحه 1)
-    products_qs = Product.objects.all().order_by("-created_at")[:12]
+
+    # گرفتن پارامتر سرچ
+    q = request.GET.get("q", "").strip()
+    products_qs = Product.objects.all()
+    if q:
+        products_qs = products_qs.filter(
+            Q(name__icontains=q) | Q(description__icontains=q)
+        )
+
+    # مرتب‌سازی بر اساس جدیدترین
+    products_qs = products_qs.order_by("-created_at")[:12]
+
     return render(
         request,
         "store/store.html",
@@ -43,24 +54,36 @@ def store(request):
     )
 
 
-def product_detail(request, id, slug):
-    """
-    نمایش جزئیات یک محصول بر اساس id و slug
-    """
-    product = get_object_or_404(Product, id=id, slug=slug)
 
-    # محصولات مرتبط
+# ---------------------------
+# جزئیات محصول
+# ---------------------------
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Product, ProductSlugHistory
+
+def product_detail(request, id, slug):
+    # گرفتن محصول بر اساس id
+    product = get_object_or_404(Product, id=id)
+
+    # اگر slug تغییر کرده باشد → ریدایرکت 301 به slug جدید
+    if product.slug != slug:
+        return redirect('product_detail', id=product.id, slug=product.slug, permanent=True)
+
+    # نمایش محصولات مرتبط
     related_products = (
-        Product.objects.filter(category=product.category).exclude(id=product.id)[:6]
-        if product.category
-        else []
+        Product.objects.filter(category=product.category)
+        .exclude(id=product.id)[:6]
+        if product.category else []
     )
 
-    context = {
-        "product": product,
-        "related_products": related_products,
-    }
-    return render(request, "store/product_detail.html", context)
+    return render(
+        request,
+        "store/product_detail.html",
+        {
+            "product": product,
+            "related_products": related_products,
+        },
+    )
 
 
 def cart(request):
@@ -71,50 +94,48 @@ def checkout(request):
     return render(request, "store/checkout.html")
 
 
-# ---------------------------
-# API endpoint برای AJAX
-# ---------------------------
+# ============================================================
+# API محصولات — نسخه نهایی و درست‌شده
+# ============================================================
+from django.core.cache import cache
+
 def api_products(request):
     qs = Product.objects.all()
-
-    # جستجو
-    q = request.GET.get("q")
-    if q:
-        qs = qs.filter(name__icontains=q)
-
-    # دسته‌بندی‌ها (multi-select) — می‌پذیرد: categories=1,2,3 یا categories=slug1,slug2
-    categories = request.GET.get("categories")  # مثال: "1,2,3"
-    if categories:
-        cat_ids = [c for c in categories.split(",") if c.strip()]
-        qs = qs.filter(category__id__in=cat_ids)
-
-    # برندها (multi-select)
+    search = request.GET.get("q", "").strip()
+    categories = request.GET.get("categories")
     brands = request.GET.get("brands")
-    if brands:
-        brand_ids = [b for b in brands.split(",") if b.strip()]
-        qs = qs.filter(brand__id__in=brand_ids)
-
-    # قیمت
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
-    if min_price:
-        try:
-            qs = qs.filter(price__gte=float(min_price))
-        except ValueError:
-            pass
-    if max_price:
-        try:
-            qs = qs.filter(price__lte=float(max_price))
-        except ValueError:
-            pass
-
-    # فقط موجودها
     in_stock = request.GET.get("in_stock")
+    sort = request.GET.get("sort")
+    page = request.GET.get("page", 1)
+    per_page = request.GET.get("per_page", 12)
+
+    # کلید cache براساس پارامترها
+    cache_key = f"products_{search}_{categories}_{brands}_{min_price}_{max_price}_{in_stock}_{sort}_{page}_{per_page}"
+    cached_data = cache.get(cache_key)
+    if cached_data:
+        return JsonResponse(cached_data)
+
+    # --- فیلترها همانطور که قبلا بود ---
+    if search:
+        qs = qs.filter(
+            Q(name__icontains=search) |
+            Q(description__icontains=search) |
+            Q(brand__name__icontains=search) |
+            Q(category__name__icontains=search) |
+            Q(slug__icontains=search)
+        )
+    if categories:
+        qs = qs.filter(category__id__in=[c for c in categories.split(",")])
+    if brands:
+        qs = qs.filter(brand__id__in=[b for b in brands.split(",")])
+    if min_price:
+        qs = qs.filter(price__gte=float(min_price))
+    if max_price:
+        qs = qs.filter(price__lte=float(max_price))
     if in_stock in ["1", "true", "True"]:
         qs = qs.filter(inventory__gte=1)
-
-    # مرتب سازی
-    sort = request.GET.get("sort")
     if sort == "price_asc":
         qs = qs.order_by("price")
     elif sort == "price_desc":
@@ -127,40 +148,24 @@ def api_products(request):
         qs = qs.order_by("-created_at")
 
     # صفحه‌بندی
-    page = request.GET.get("page", 1)
-    per_page = request.GET.get("per_page", 12)
-    try:
-        page = int(page)
-    except ValueError:
-        page = 1
-    try:
-        per_page = int(per_page)
-    except ValueError:
-        per_page = 12
-
     paginator = Paginator(qs, per_page)
-    try:
-        page_obj = paginator.page(page)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
+    page_obj = paginator.get_page(page)
+    products_data = [
+        {
+            "id": product.id,
+            "name": product.name,
+            "slug": product.slug,
+            "description": product.description[:200],
+            "price": str(product.price),
+            "image": product.image.url if product.image else None,
+            "category": product.category.name if product.category else None,
+            "brand": product.brand.name if product.brand else None,
+            "inventory": product.inventory,
+        }
+        for product in page_obj.object_list
+    ]
 
-    products_data = []
-    for product in page_obj.object_list:
-        products_data.append(
-            {
-                "id": product.id,
-                "name": product.name,
-                "slug": product.slug,
-                "description": product.description[:200],
-                "price": str(product.price),
-                "image": product.image.url if product.image else None,
-                "category": product.category.name if product.category else None,
-                "brand": product.brand.name if product.brand else None,
-                "inventory": product.inventory,
-            }
-        )
-
-    data = {
+    response_data = {
         "results": products_data,
         "pagination": {
             "page": page_obj.number,
@@ -171,8 +176,24 @@ def api_products(request):
             "has_prev": page_obj.has_previous(),
         },
     }
-    return JsonResponse(data)
 
+    cache.set(cache_key, response_data, 60 * 5)  # cache به مدت 5 دقیقه
+    return JsonResponse(response_data)
+
+
+def api_suggest(request):
+    q = request.GET.get("q", "").strip()
+    suggestions = []
+    if q:
+        products = Product.objects.filter(name__icontains=q)[:10]
+        suggestions = [p.name for p in products]
+    return JsonResponse({"suggestions": suggestions})
+
+
+
+# ---------------------------
+# نمایش دسته
+# ---------------------------
 def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = Product.objects.filter(category=category)
@@ -183,15 +204,22 @@ def category_view(request, slug):
         {
             "category": category,
             "products": products,
-        }
+        },
     )
 
 
+# ---------------------------
+# نمایش برند
+# ---------------------------
 def brand_view(request, slug):
     brand = get_object_or_404(Brand, slug=slug)
     products = Product.objects.filter(brand=brand)
 
-    return render(request, "store/brand.html", {
-        "brand": brand,
-        "products": products
-    })
+    return render(
+        request,
+        "store/brand.html",
+        {
+            "brand": brand,
+            "products": products,
+        },
+    )

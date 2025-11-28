@@ -1,10 +1,9 @@
 # store/models.py
 import os
-
+import re
 from django.db import models
 from django.utils.text import slugify
 from PIL import Image
-
 
 # -----------------------------
 # مسیر ذخیره تصویر محصول
@@ -16,11 +15,21 @@ def product_image_path(instance, filename):
 
 
 # -----------------------------
+# Helper برای ساخت slug
+# -----------------------------
+def clean_slug(name):
+    slug = slugify(name, allow_unicode=True)
+    slug = re.sub(r"[^\w\-]", "", slug)  # فقط حروف، اعداد، _ و - باقی می‌ماند
+    slug = re.sub(r"[-]+", "-", slug)    # جلوگیری از چند خط فاصله پشت سر هم
+    return slug.strip("-")
+
+
+# -----------------------------
 # مدل دسته‌بندی
 # -----------------------------
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=120, unique=True, blank=True)
+    slug = models.SlugField(max_length=120, unique=True, blank=True, allow_unicode=True)
 
     class Meta:
         verbose_name_plural = "دسته‌بندی‌ها"
@@ -30,7 +39,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(self.name, allow_unicode=True)
+            base_slug = clean_slug(self.name)
             slug = base_slug
             counter = 1
             while Category.objects.filter(slug=slug).exists():
@@ -40,12 +49,12 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
 
-# -------------------------
-# Brand
-# -------------------------
+# -----------------------------
+# مدل برند
+# -----------------------------
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=120, unique=True, blank=True)
+    slug = models.SlugField(max_length=120, unique=True, blank=True, allow_unicode=True)
 
     class Meta:
         verbose_name = "برند"
@@ -56,14 +65,26 @@ class Brand(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base = slugify(self.name, allow_unicode=True)
-            slug = base
+            base_slug = clean_slug(self.name)
+            slug = base_slug
             counter = 1
             while Brand.objects.filter(slug=slug).exists():
-                slug = f"{base}-{counter}"
+                slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+
+# -----------------------------
+# تاریخچه Slug محصولات
+# -----------------------------
+class ProductSlugHistory(models.Model):
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='slug_history')
+    old_slug = models.SlugField(max_length=220, allow_unicode=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.old_slug} -> {self.product.name}"
 
 
 # -----------------------------
@@ -71,7 +92,7 @@ class Brand(models.Model):
 # -----------------------------
 class Product(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    slug = models.SlugField(max_length=220, unique=True, blank=True, allow_unicode=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=0)
     image = models.ImageField(upload_to=product_image_path, blank=True, null=True)
@@ -96,9 +117,15 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # ساخت slug خودکار
+        # ذخیره slug قدیمی قبل از تغییر
+        if self.pk:
+            old = Product.objects.get(pk=self.pk)
+            if old.slug != self.slug and self.slug:  # اگر slug جدید تنظیم شده
+                ProductSlugHistory.objects.create(product=self, old_slug=old.slug)
+
+        # ساخت slug خودکار اگر خالی باشد
         if not self.slug:
-            base_slug = slugify(self.name, allow_unicode=True)
+            base_slug = clean_slug(self.name)
             slug = base_slug
             counter = 1
             while Product.objects.filter(slug=slug).exists():
@@ -165,9 +192,10 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id} - {self.customer_name}"
 
-# -------------------------
-# Variant (for product.variants)
-# -------------------------
+
+# -----------------------------
+# مدل Variant
+# -----------------------------
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     name = models.CharField(max_length=120)
@@ -178,9 +206,9 @@ class Variant(models.Model):
         return f"{self.product.name} - {self.name}"
 
 
-# -------------------------
-# Specification (product.specifications)
-# -------------------------
+# -----------------------------
+# مدل Specification
+# -----------------------------
 class Specification(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="specifications")
     name = models.CharField(max_length=120)

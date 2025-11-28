@@ -1,8 +1,6 @@
 {% extends 'store/base.html' %}
 {% load static %}
-
 {% load price_filters %}
-{{ product.price|toman }} تومان
 
 {% block content %}
 <main class="py-8 bg-[#fdfef9]">
@@ -14,8 +12,7 @@
       </div>
       <div class="flex items-center space-x-4 space-x-reverse mt-4 md:mt-0">
         <div class="flex items-center">
-          <!-- <span class="text-gray-700 ml-2">مرتب‌سازی:</span> -->
-          <select id="sortSelect" class="bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none">
+          <select id="sortSelect" class="bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
             <option value="">پیش‌فرض</option>
             <option value="price_asc">ارزان‌ترین</option>
             <option value="price_desc">گران‌ترین</option>
@@ -24,33 +21,24 @@
           </select>
         </div>
 
-        <!-- <div class="flex items-center">
-          <span class="text-gray-700 ml-2">نمایش:</span>
-          <select id="perPageSelect" class="bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none">
-            <option value="12">۱۲ محصول</option>
-            <option value="24">۲۴ محصول</option>
-            <option value="48">۴۸ محصول</option>
-          </select>
-        </div> -->
-
-        <button id="filterToggle" class="filter-toggle bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center">
-            <i class="fas fa-filter ml-2"></i>
-            فیلترها
+        <button id="filterToggle" class="filter-toggle bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-emerald-700 transition duration-300">
+          <i class="fas fa-filter ml-2"></i>
+          فیلترها
         </button>
       </div>
     </div>
 
     <div class="flex flex-col md:flex-row gap-8">
       <!-- فیلترها -->
-      <aside class="filter-section md:w-1/4 bg-white rounded-xl shadow-lg p-6 h-fit">
+      <aside class="filter-section md:w-1/4 bg-white rounded-xl shadow-lg p-6 h-fit sticky top-4">
         <form id="filtersForm" onsubmit="return false;">
           <div class="mb-6">
-            <h3 class="font-bold text-gray-700 mb-3">دسته‌بندی</h3>
-            <div class="space-y-2 max-h-48 overflow-auto">
+            <h3 class="font-bold text-gray-700 mb-3 text-lg">دسته‌بندی</h3>
+            <div class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
               {% for cat in categories %}
-                <div class="flex items-center">
-                  <input type="checkbox" class="filter-category rounded text-emerald-600" value="{{ cat.id }}" id="cat_{{ cat.id }}">
-                  <label for="cat_{{ cat.id }}" class="mr-2 text-gray-700 cursor-pointer">{{ cat.name }}</label>
+                <div class="flex items-center hover:bg-gray-50 rounded-lg p-2 transition">
+                  <input type="checkbox" class="filter-category rounded text-emerald-600 focus:ring-emerald-500" value="{{ cat.id }}" id="cat_{{ cat.id }}">
+                  <label for="cat_{{ cat.id }}" class="mr-2 text-gray-700 cursor-pointer hover:text-emerald-600 transition">{{ cat.name }}</label>
                 </div>
               {% empty %}
                 <p class="text-gray-500 text-sm">دسته‌ای موجود نیست.</p>
@@ -59,12 +47,12 @@
           </div>
 
           <div class="mb-6">
-            <h3 class="font-bold text-gray-700 mb-3">برند</h3>
-            <div class="space-y-2 max-h-48 overflow-auto">
+            <h3 class="font-bold text-gray-700 mb-3 text-lg">برند</h3>
+            <div class="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
               {% for br in brands %}
-                <div class="flex items-center">
-                  <input type="checkbox" class="filter-brand rounded text-emerald-600" value="{{ br.id }}" id="brand_{{ br.id }}">
-                  <label for="brand_{{ br.id }}" class="mr-2 text-gray-700 cursor-pointer">{{ br.name }}</label>
+                <div class="flex items-center hover:bg-gray-50 rounded-lg p-2 transition">
+                  <input type="checkbox" class="filter-brand rounded text-emerald-600 focus:ring-emerald-500" value="{{ br.id }}" id="brand_{{ br.id }}">
+                  <label for="brand_{{ br.id }}" class="mr-2 text-gray-700 cursor-pointer hover:text-emerald-600 transition">{{ br.name }}</label>
                 </div>
               {% empty %}
                 <p class="text-gray-500 text-sm">برندی موجود نیست.</p>
@@ -73,31 +61,34 @@
           </div>
 
           <div class="mb-6">
-            <h3 class="font-bold text-gray-700 mb-3">محدوده قیمت</h3>
-            <div class="space-y-2">
+            <h3 class="font-bold text-gray-700 mb-3 text-lg">محدوده قیمت</h3>
+            <div class="space-y-4">
               <div class="flex justify-between text-sm text-gray-600">
                 <span id="displayMinPrice">۰ تومان</span>
-                <span id="displayMaxPrice">۵۰۰,۰۰۰ تومان</span>
+                <span id="displayMaxPrice">۵,۰۰۰,۰۰۰ تومان</span>
               </div>
-              <!-- ما یک اسلایدر ساده (max only) گذاشتیم، می‌تونی double-range اضافه کنی -->
-              <input type="range" min="0" max="10000000" value="10000000" step="10000" class="price-slider" id="priceRange">
+              <div class="relative pt-4">
+                <input type="range" min="0" max="5000000" value="5000000" step="10000" 
+                       class="price-slider w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" 
+                       id="priceRange">
+              </div>
               <input type="hidden" id="minPriceInput" value="0">
-              <input type="hidden" id="maxPriceInput" value="10000000">
+              <input type="hidden" id="maxPriceInput" value="5000000">
             </div>
           </div>
 
           <div class="mb-6">
-            <h3 class="font-bold text-gray-700 mb-3">وضعیت موجودی</h3>
+            <h3 class="font-bold text-gray-700 mb-3 text-lg">وضعیت موجودی</h3>
             <div class="space-y-2">
-              <div class="flex items-center">
-                <input type="checkbox" id="inStockCheckbox" class="rounded text-emerald-600">
-                <label for="inStockCheckbox" class="mr-2 text-gray-700 cursor-pointer">فقط کالاهای موجود</label>
+              <div class="flex items-center hover:bg-gray-50 rounded-lg p-2 transition">
+                <input type="checkbox" id="inStockCheckbox" class="rounded text-emerald-600 focus:ring-emerald-500">
+                <label for="inStockCheckbox" class="mr-2 text-gray-700 cursor-pointer hover:text-emerald-600 transition">فقط کالاهای موجود</label>
               </div>
             </div>
           </div>
 
           <div class="flex space-x-3 space-x-reverse">
-            <button id="resetFiltersBtn" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition duration-300" type="button">
+            <button id="resetFiltersBtn" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition duration-300 font-semibold" type="button">
               بازنشانی
             </button>
           </div>
@@ -106,208 +97,209 @@
 
       <!-- محصولات -->
       <section class="md:w-3/4">
-        <div id="productsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {% for product in products %}
-            <a href="{% url 'product_detail' product.id product.slug %}" class="block group">
-              <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift product-card" data-id="{{ product.id }}">
-                <div class="relative">
-                  {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
-                  {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="No image" class="w-full h-48 object-cover">
-                  {% endif %}
-                </div>
-                <div class="p-4">
-                  <h3 class="text-lg font-bold text-gray-800 mb-2">{{ product.name }}</h3>
-                  <p class="text-gray-600 text-sm mb-3">{{ product.description|truncatechars:30 }}</p>
-                  <div class="flex justify-between items-center">
-                    <span class="text-lg font-bold text-emerald-600">{{ product.price|toman }} تومان</span>
-                    <button class="bg-emerald-600 text-white px-3 py-1 rounded-lg hover:bg-emerald-700 transition duration-300 text-sm">
-                      <i class="fas fa-cart-plus ml-1"></i> افزودن
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </a>
-          {% endfor %}
-
+        <!-- اطلاعات فیلترهای فعال -->
+        <div id="activeFilters" class="mb-6 flex flex-wrap gap-2 hidden">
+          <!-- فیلترهای فعال در اینجا نمایش داده می‌شوند -->
         </div>
 
-        <!-- ناحیهٔ صفحه‌بندی -->
-        <div id="pagination" class="mt-6 flex justify-center items-center space-x-2 space-x-reverse"></div>
+        <!-- تعداد نتایج -->
+        <div id="resultsInfo" class="mb-4 text-gray-600 text-sm">
+          در حال نمایش <span id="resultsCount">{{ products|length }}</span> محصول
+        </div>
+
+        <div id="productsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for product in products %}
+            <div class="group relative">
+              <a href="{% url 'product_detail' product.id product.slug %}" class="block">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 product-card h-full flex flex-col" data-id="{{ product.id }}">
+                  <!-- بخش تصویر با نمایش کامل -->
+                  <div class="relative bg-gray-50 flex items-center justify-center p-4 h-64">
+                    {% if product.image %}
+                      <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                           class="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105">
+                    {% else %}
+                      <img src="{% static 'images/default.png' %}" alt="No image" 
+                           class="max-w-full max-h-full w-auto h-auto object-contain">
+                    {% endif %}
+                    
+                    <!-- نشانگر تخفیف -->
+                    {% if product.discount_price %}
+                      <div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                        {{ product.discount_percent }}% تخفیف
+                      </div>
+                    {% endif %}
+                    
+                    <!-- نشانگر وضعیت موجودی -->
+                    <div class="absolute top-3 right-3">
+                      {% if product.inventory > 0 %}
+                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          موجود
+                        </span>
+                      {% else %}
+                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          ناموجود
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <!-- اطلاعات محصول -->
+                  <div class="p-4 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 leading-relaxed">
+                      {{ product.name }}
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-3 flex-1 leading-relaxed">
+                      {{ product.description|default:"توضیحات موجود نیست"|truncatewords:1 }}
+                    </p>
+
+                    
+                    <!-- قیمت -->
+                    <div class="mt-auto">
+                      {% if product.discount_price %}
+                        <div class="flex items-center gap-2 mb-2">
+                          <span class="text-lg font-bold text-emerald-600">
+                            {{ product.discount_price|toman }} تومان
+                          </span>
+                          <span class="text-sm text-gray-500 line-through">
+                            {{ product.price|toman }}
+                          </span>
+                        </div>
+                      {% else %}
+                        <span class="text-lg font-bold text-emerald-600 mb-2 block">
+                          {{ product.price|toman }} تومان
+                        </span>
+                      {% endif %}
+                      
+                      <!-- دکمه اقدام -->
+                      <div class="flex justify-between items-center">
+                        <button class="add-to-cart-btn bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition duration-300 flex items-center text-sm font-semibold"
+                                data-product-id="{{ product.id }}">
+                          <i class="fas fa-cart-plus ml-2"></i>
+                          افزودن به سبد
+                        </button>
+                        
+                        <!-- امتیاز محصول -->
+                        <div class="flex items-center text-amber-500 text-sm">
+                          <i class="fas fa-star ml-1"></i>
+                          <span>4.8</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% empty %}
+            <div class="col-span-full text-center py-12">
+              <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
+              <p class="text-gray-500 text-lg">هیچ محصولی یافت نشد.</p>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- ناحیه صفحه‌بندی -->
+        <div id="pagination" class="mt-8 flex justify-center items-center space-x-2 space-x-reverse"></div>
       </section>
     </div>
   </div>
 </main>
 
+<!-- استایل‌های سفارشی -->
+<style>
+/* اسکرول بار سفارشی */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* محدوده قیمت سفارشی */
+.price-slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #059669;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.price-slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #059669;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* انیمیشن‌ها */
+.product-card {
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+}
+
+
+/* موقعیت ثابت برای فیلترها در حالت دسکتاپ */
+@media (min-width: 768px) {
+  .sticky {
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+/* استایل‌های ریسپانسیو */
+@media (max-width: 767px) {
+  .filter-section {
+    margin-bottom: 2rem;
+  }
+}
+
+/* استایل برای فیلترهای فعال */
+.active-filter-tag {
+  background: #ecfdf5;
+  border: 1px solid #10b981;
+  color: #047857;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.active-filter-tag button {
+  color: #ef4444;
+  margin-right: 4px;
+}
+
+.active-filter-tag button:hover {
+  color: #dc2626;
+}
+</style>
+
 <script>
-(function(){
-  const apiUrl = "{% url 'api_products' %}";
-  const productsContainer = document.getElementById('productsContainer');
-  const resetBtn = document.getElementById('resetFiltersBtn');
-  const priceRange = document.getElementById('priceRange');
-  const displayMaxPrice = document.getElementById('displayMaxPrice');
-  const displayMinPrice = document.getElementById('displayMinPrice');
-  const maxPriceInput = document.getElementById('maxPriceInput');
-  const minPriceInput = document.getElementById('minPriceInput');
-  const inStockCheckbox = document.getElementById('inStockCheckbox');
-  const sortSelect = document.getElementById('sortSelect');
-  const paginationDiv = document.getElementById('pagination');
-
-  // فرمت فارسی اعداد
-  function formatFa(n) {
-    return Number(n).toLocaleString('fa-IR');
-  }
-
-  // مقداردهی اولیه نمایش قیمت
-  displayMinPrice.textContent = formatFa(minPriceInput.value) + ' تومان';
-  displayMaxPrice.textContent = formatFa(maxPriceInput.value) + ' تومان';
-
-  // آماده‌سازی پارامترها برای API
-  function buildParams(page=1) {
-    const obj = {};
-    // دسته‌بندی‌ها
-    const catVals = Array.from(document.querySelectorAll('.filter-category:checked')).map(cb => cb.value);
-    if (catVals.length) obj.categories = catVals.join(',');
-    // برندها
-    const brandVals = Array.from(document.querySelectorAll('.filter-brand:checked')).map(cb => cb.value);
-    if (brandVals.length) obj.brands = brandVals.join(',');
-    // قیمت
-    obj.min_price = minPriceInput.value || 0;
-    obj.max_price = maxPriceInput.value || 10000000;
-    // موجودی
-    if (inStockCheckbox.checked) obj.in_stock = '1';
-    // مرتب‌سازی
-    if (sortSelect.value) obj.sort = sortSelect.value;
-    // صفحه و تعداد در هر صفحه
-    obj.page = page;
-    obj.per_page = 12;
-    return obj;
-  }
-
-  // ایمن‌سازی متن برای innerHTML
-  function escapeHtml(unsafe) {
-    return (unsafe+'').replace(/[&<"'>]/g, function(m) {
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
-    });
-  }
-
-  // رندر محصولات
-  function renderProducts(products) {
-      productsContainer.innerHTML = '';
-      if (!products.length) {
-        productsContainer.innerHTML = '<p class="text-gray-600 text-center col-span-full">هیچ محصولی یافت نشد.</p>';
-        return;
-      }
-      products.forEach(p => {
-        const card = document.createElement('a');  // از div به a تغییر دادیم
-        card.href = `/product/${p.id}/${p.slug}/`; // لینک جزئیات محصول
-        card.className = 'block group';
-
-        const imageUrl = p.image ? p.image : '{% static "images/default.png" %}';
-        card.innerHTML = `
-          <div class="bg-white rounded-xl shadow-md overflow-hidden hover-lift product-card" data-id="${p.id}">
-            <div class="relative">
-              <img src="${imageUrl}" alt="${escapeHtml(p.name)}" class="w-full h-48 object-cover">
-            </div>
-            <div class="p-4">
-              <h3 class="text-lg font-bold text-gray-800 mb-2">${escapeHtml(p.name)}</h3>
-              <p class="text-gray-600 text-sm mb-3">${escapeHtml(p.description || '').slice(0,70)}</p>
-              <div class="flex justify-between items-center">
-                <span class="text-lg font-bold text-emerald-600">${Number(p.price).toLocaleString('fa-IR')} تومان</span>
-                <button class="bg-emerald-600 text-white px-3 py-1 rounded-lg hover:bg-emerald-700 transition duration-300 text-sm">
-                  <i class="fas fa-cart-plus ml-1"></i> افزودن
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-        productsContainer.appendChild(card);
-      });
-  }
-
-  // رندر صفحه‌بندی
-  function renderPagination(pagination) {
-    paginationDiv.innerHTML = '';
-    if (!pagination || pagination.total_pages <= 1) return;
-
-    const createBtn = (text, page, disabled=false, active=false) => {
-      const btn = document.createElement('button');
-      btn.className = 'px-3 py-1 rounded border';
-      if (disabled) btn.classList.add('opacity-50','cursor-not-allowed');
-      if (active) btn.classList.add('bg-emerald-600','text-white','border-emerald-600');
-      btn.textContent = text;
-      if (!disabled) btn.addEventListener('click', () => loadProducts(page, true));
-      return btn;
-    };
-
-    paginationDiv.appendChild(createBtn('قبلی', Math.max(1, pagination.page - 1), !pagination.has_prev));
-    
-    const total = pagination.total_pages;
-    const current = pagination.page;
-    let start = Math.max(1, current - 3);
-    let end = Math.min(total, current + 3);
-    if (current <= 4) start = 1;
-    if (current > total - 4) end = total;
-    for (let i = start; i <= end; i++) {
-      paginationDiv.appendChild(createBtn(i, i, false, i===current));
-    }
-    paginationDiv.appendChild(createBtn('بعدی', Math.min(total, pagination.page + 1), !pagination.has_next));
-  }
-
-  // بارگذاری محصولات از API
-  async function loadProducts(page=1, pushState=false) {
-    const paramsObj = buildParams(page);
-    const qs = new URLSearchParams(paramsObj).toString();
-    const url = apiUrl + '?' + qs;
-    try {
-      const res = await fetch(url, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' });
-      if (!res.ok) throw new Error('Network error');
-      const data = await res.json();
-      renderProducts(data.results || []);
-      renderPagination(data.pagination || {});
-      if (pushState) history.pushState(null, '', '{% url "store" %}?'+qs);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  // لایو فیلتر: هر تغییر در فیلترها باعث loadProducts می‌شود
-  document.querySelectorAll('.filter-category, .filter-brand').forEach(cb => {
-    cb.addEventListener('change', () => loadProducts(1, true));
-  });
-  inStockCheckbox.addEventListener('change', () => loadProducts(1, true));
-  sortSelect.addEventListener('change', () => loadProducts(1, true));
-  priceRange.addEventListener('input', () => {
-    maxPriceInput.value = priceRange.value;
-    displayMaxPrice.textContent = formatFa(priceRange.value) + ' تومان';
-    loadProducts(1, true);
-  });
-
-  // ریست فیلترها
-  resetBtn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-category, .filter-brand').forEach(cb => cb.checked = false);
-    inStockCheckbox.checked = false;
-    priceRange.value = 500000;
-    maxPriceInput.value = 10000000;
-    minPriceInput.value = 0;
-    displayMaxPrice.textContent = formatFa(500000) + ' تومان';
-    displayMinPrice.textContent = formatFa(0) + ' تومان';
-    sortSelect.value = '';
-    loadProducts(1, true);
-  });
-
-  // بارگذاری اولیه
-  loadProducts(1, false);
-
-  // مدیریت back/forward
-  window.addEventListener('popstate', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const page = parseInt(urlParams.get('page') || '1');
-    loadProducts(page, false);
-  });
-
-})();
+  const apiProductsUrl = "{% url 'api_products' %}";
+  const defaultProductImage = "{% static 'images/default.png' %}";
 </script>
+<script src="{% static 'js/store.js' %}"></script>
+
 
 {% endblock %}

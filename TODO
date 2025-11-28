@@ -4,6 +4,7 @@
 [+] Complete All store fuatre
 [+] Format price given and taken iranian 
 [+] pre-commit Setup
+[+] Special Product ?
 [+] Improve header and footer and index
 [] product_detail.html ui/ux Improve(deepseek)
     - [+] Breadcrumb
@@ -23,7 +24,11 @@
 [] Create account section
 [] Zarinpal payment
 [] Create Email (papelbar.ir@gmail.com)
-[+] Special Product ?
 [] sortSelect backend ajax fix (live ajax)
 [+] css clean
 [] Category Create
+[] index.html special product slider and more prduct can add more 3+
+[+] JS clean
+[+] product slug persian error
+[+] slug redirct update when edit
+[] product des store.html word limit not working
