@@ -145,12 +145,13 @@
 
                   <!-- اطلاعات محصول -->
                   <div class="p-4 flex-1 flex flex-col">
-                    <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 leading-relaxed">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 leading-relaxed">
                       {{ product.name }}
                     </h3>
-                    <p class="text-gray-600 text-sm mb-3 flex-1 line-clamp-3 leading-relaxed">
-                      {{ product.description|default:"توضیحات موجود نیست" }}
+                    <p class="text-gray-600 text-sm mb-3 flex-1 leading-relaxed">
+                      {{ product.description|default:"توضیحات موجود نیست"|truncatewords:1 }}
                     </p>
+
                     
                     <!-- قیمت -->
                     <div class="mt-auto">
@@ -255,20 +256,6 @@
   transform: translateY(-8px);
 }
 
-/* محدود کردن خطوط متن */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 
 /* موقعیت ثابت برای فیلترها در حالت دسکتاپ */
 @media (min-width: 768px) {

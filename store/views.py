@@ -58,9 +58,18 @@ def store(request):
 # ---------------------------
 # جزئیات محصول
 # ---------------------------
-def product_detail(request, id, slug):
-    product = get_object_or_404(Product, id=id, slug=slug)
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Product, ProductSlugHistory
 
+def product_detail(request, id, slug):
+    # گرفتن محصول بر اساس id
+    product = get_object_or_404(Product, id=id)
+
+    # اگر slug تغییر کرده باشد → ریدایرکت 301 به slug جدید
+    if product.slug != slug:
+        return redirect('product_detail', id=product.id, slug=product.slug, permanent=True)
+
+    # نمایش محصولات مرتبط
     related_products = (
         Product.objects.filter(category=product.category)
         .exclude(id=product.id)[:6]
