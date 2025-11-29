@@ -1,8 +1,8 @@
 {% extends 'store/base.html' %}
 
 {% block title %}صفحه اصلی - پاپل بار{% endblock %}
-
 {% load price_filters %}
+{% load static %}
 
 
 {% block content %}
@@ -126,12 +126,16 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {% for p in special_products %}
                     <a href="{% url 'product_detail' p.id p.slug %}" 
-                    class="bg-white rounded-2xl shadow-lg overflow-hidden hover-lift flex flex-col h-full">
+                    class="bg-white rounded-2xl overflow-hidden hover-lift flex flex-col h-full">
 
                         <!-- بخش بالا: تصویر و اطلاعات اصلی -->
                         <div class="p-6 flex-1 flex flex-col">
                             <div class="relative mb-4">
-                                <img src="{{ p.image.url }}" alt="{{ p.name }}" class="w-full h-48 object-cover rounded-xl">
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" alt="{{ p.name }}" class="w-full h-48 object-cover rounded-xl">
+                                {% else %}
+                                    <img src="{% static 'images/default.png' %}" alt="no image" class="w-full h-48 object-cover rounded-xl">
+                                {% endif %}
                                 <span class="absolute top-4 left-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                                     ویژه
                                 </span>
