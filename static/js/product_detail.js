@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const shortDescription = document.getElementById('short-description');
   const fullDescription = document.getElementById('full-description');
   const addToCartBtn = document.getElementById('add-to-cart');
-  const ratingBox = document.querySelector('.rating-box');
+  const ratingBox = document.getElementById('rating-box');
   const productId = window.PRODUCT_ID; // مقداردهی از template
 
   let unitPrice = parseInt(unitPriceElem?.dataset.price) || 0;
