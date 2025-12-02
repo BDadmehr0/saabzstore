@@ -105,7 +105,7 @@
             <h1 class="text-2xl font-bold text-gray-800 leading-tight">
               {{ product.name }}
             </h1>
-            <div class="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-sm">
+            <div id="rating-box" class="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-sm">
               <i class="fas fa-star ml-1 text-amber-400"></i>
               <span>4.8</span>
               <span class="text-amber-500 mx-1">•</span>
@@ -164,7 +164,7 @@
           <!-- Price Section with better visual hierarchy -->
           <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-5 mb-6 border border-emerald-100">
             <div class="flex items-center justify-between mb-3">
-              <span class="text-lg font-semibold text-gray-700">قیمت:</span>
+              <span class="text-lg font-semibold text-gray-700">قیمت</span>
               <div class="flex items-center gap-3">
                 {% if product.discount_price %}
                   <div class="flex flex-col items-end">
@@ -185,7 +185,7 @@
             </div>
             
             <div class="flex items-center justify-between pt-3 border-t border-emerald-100">
-              <span class="text-gray-600 text-sm">موجودی:</span>
+              <span class="text-gray-600 text-sm">موجودی</span>
               {% if product.inventory > 0 %}
                 <div class="flex items-center">
                   <div class="w-2 h-2 bg-green-500 rounded-full ml-2"></div>
@@ -254,7 +254,7 @@
             <!-- Total Price Display -->
             <div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
               <div class="flex justify-between items-center">
-                <span class="text-blue-700 font-medium">قیمت کل:</span>
+                <span class="text-blue-700 font-medium">قیمت کل</span>
                 <span id="total-price" class="text-xl font-bold text-blue-700">
                   {{ product.discount_price|default:product.price|toman }} تومان
                 </span>
@@ -318,14 +318,41 @@
             </div>
             
             <div id="tab-reviews" class="tab-content hidden">
-              <div class="text-center py-8 text-gray-500">
-                <i class="fas fa-comments text-4xl mb-3 text-gray-300"></i>
-                <p class="mb-4">هنوز نظری برای این محصول ثبت نشده است.</p>
-                <button class="bg-emerald-600 text-white px-6 py-3 rounded-xl hover:bg-emerald-700 transition font-semibold">
-                  اولین نظر را بنویسید
-                </button>
+
+              <!-- فرم ارسال نظر -->
+              {% if user.is_authenticated %}
+              <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <h3 class="text-lg font-semibold mb-3">ثبت نظر شما</h3>
+
+                  <div class="flex items-center mb-3">
+                      <span class="mr-3">امتیاز:</span>
+                      <select id="rating" class="border rounded-lg p-2">
+                          <option value="5">5 ستاره</option>
+                          <option value="4">4 ستاره</option>
+                          <option value="3">3 ستاره</option>
+                          <option value="2">2 ستاره</option>
+                          <option value="1">1 ستاره</option>
+                      </select>
+                  </div>
+
+                  <textarea id="comment" class="w-full p-3 rounded-lg border" rows="4" placeholder="نظر خود را بنویسید..."></textarea>
+
+                  <button id="submit-review" class="mt-3 bg-emerald-600 text-white px-5 py-2 rounded-lg">
+                      ارسال نظر
+                  </button>
+
+                  <!-- <p id="review-msg" class="text-sm text-red-500 mt-2"></p> -->
               </div>
-            </div>
+              {% else %}
+                  <p class="text-gray-500 text-center py-3">
+                      برای ثبت نظر، ابتدا <a href="/auth/" class="text-emerald-600">وارد شوید</a>.
+                  </p>
+              {% endif %}
+
+              <!-- نمایش نظرات -->
+              <div id="reviews-list"></div>
+          </div>
+
             
             <div id="tab-questions" class="tab-content hidden">
               <div class="text-center py-8 text-gray-500">
@@ -378,6 +405,10 @@
     </section>
   </div>
 </main>
+
+<script>
+    window.PRODUCT_ID = {{ product.id }};
+</script>
 
 <script src="{% static 'js/product_detail.js' %}"></script>
 

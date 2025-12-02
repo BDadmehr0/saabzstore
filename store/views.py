@@ -1,12 +1,15 @@
 # store/views.py
+import json
 import random
 
 from django.core.paginator import EmptyPage, Paginator
-from django.db.models import Q
+from django.db.models import Avg, Count, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
-from .models import Brand, Category, Product
+from .models import Brand, Category, Order, Product, ProductReview
 
 
 # ---------------------------
@@ -185,13 +188,84 @@ def api_products(request):
     return JsonResponse(response_data)
 
 
-def api_suggest(request):
-    q = request.GET.get("q", "").strip()
-    suggestions = []
-    if q:
-        products = Product.objects.filter(name__icontains=q)[:10]
-        suggestions = [p.name for p in products]
-    return JsonResponse({"suggestions": suggestions})
+@csrf_exempt
+def api_add_review(request, product_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "ابتدا وارد شوید."})
+
+    product = get_object_or_404(Product, id=product_id)
+
+    # آیا کاربر این محصول را خریده؟
+    has_bought = Order.objects.filter(
+        phone=request.user.phone_number,
+        products=product,
+    ).exists()
+
+    if not has_bought:
+        return JsonResponse(
+            {"success": False, "error": "شما این محصول را خریداری نکرده‌اید."}
+        )
+
+    data = json.loads(request.body)
+
+    rating = int(data.get("rating", 5))
+    comment = data.get("comment", "").strip()
+
+    if rating < 1 or rating > 5:
+        return JsonResponse({"success": False, "error": "امتیاز نامعتبر است."})
+
+    # جلوگیری از ثبت چندباره
+    review, created = ProductReview.objects.update_or_create(
+        user=request.user,
+        product=product,
+        defaults={"rating": rating, "comment": comment},
+    )
+
+    return JsonResponse({"success": True, "message": "نظر با موفقیت ثبت شد."})
+
+
+def api_get_reviews(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    reviews = product.reviews.all().order_by("-created_at")
+
+    avg_rating = reviews.aggregate(avg=Avg("rating"))["avg"] or 0
+    count = reviews.count()
+
+    data = [
+        {
+            "id": r.id,
+            "user": r.user.name,
+            "rating": r.rating,
+            "comment": r.comment,
+            "created_at": r.created_at.strftime("%Y-%m-%d"),
+            "can_delete": request.user.is_authenticated
+            and (r.user == request.user or request.user.is_staff),
+        }
+        for r in reviews
+    ]
+
+    return JsonResponse(
+        {"reviews": data, "avg_rating": round(avg_rating, 1), "count": count}
+    )
+
+
+@csrf_exempt
+@require_POST
+def api_delete_review(request, review_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "ابتدا وارد شوید."})
+
+    try:
+        review = ProductReview.objects.get(id=review_id)
+    except ProductReview.DoesNotExist:
+        return JsonResponse({"success": False, "error": "نظر پیدا نشد."})
+
+    # فقط کاربر صاحب نظر یا ادمین می‌تواند حذف کند
+    if review.user != request.user and not request.user.is_staff:
+        return JsonResponse({"success": False, "error": "دسترسی ندارید."})
+
+    review.delete()
+    return JsonResponse({"success": True, "message": "نظر با موفقیت حذف شد."})
 
 
 # ---------------------------

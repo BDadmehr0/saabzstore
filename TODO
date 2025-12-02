@@ -15,7 +15,7 @@
 [+] Store product title limit
 [+] Create account section
     [+] Dashboard
-    [+] auth (otp, password, phone)
+    [+] auth (otp, password, phone, name)
     [] connect otp service sms.ir
     [] improve auth.html, dashboard.html ui/ux
 [] Product comments & stars create
@@ -25,9 +25,9 @@
     - [+] Javascript's
     - [+] Image
     - [+] Load more
-    - [] Comments => account
+    - [+] Comments => account
     - [] Cart
-    - [] stars
+    - [x] stars (have update problem)
     - [] tab and some conetent center div
 [+] sotre.html fix & add
     - [+] Product Image view have bug Fix it!

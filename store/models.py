@@ -177,6 +177,27 @@ class Product(models.Model):
             pass
 
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="reviews"
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(default=5)  # 1–5
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("product", "user")  # هر کاربر فقط یک بار نظر بدهد
+
+    def __str__(self):
+        return f"{self.user.name} - {self.product.name} ({self.rating})"
+
+
 # -----------------------------
 # مدل سفارش
 # -----------------------------
