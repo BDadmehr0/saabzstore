@@ -35,9 +35,14 @@
     - [+] rate
     - [+] change default desc
 
-- [] Cart
+- [+] Cart
+    - [] Front
 [] Zarinpal payment
 [] index.html special product slider and more prduct can add more 3+
 [] Improve admin panel ui ux (custom dashboard)
 [] clean code python file
 [] Create Email (papelbar.ir@gmail.com)
+
+
+
+[] filter not working on mobile and filter popup section

@@ -75,26 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ===========================
-     انتخاب واریانت
-  ============================ */
-
-  variantBtns.forEach(btn => {
-    btn.addEventListener('click', function () {
-      if (!this.disabled) {
-        variantBtns.forEach(v =>
-          v.classList.remove('bg-emerald-50','border-emerald-400','shadow-md')
-        );
-        this.classList.add('bg-emerald-50','border-emerald-400','shadow-md');
-        unitPrice = parseInt(this.dataset.price);
-        const inventory = parseInt(this.dataset.inventory);
-        quantityInput.max = inventory;
-        if (parseInt(quantityInput.value) > inventory) quantityInput.value = inventory;
-        updateTotalPrice();
-      }
-    });
-  });
-
-  /* ===========================
      محاسبه قیمت کل
   ============================ */
 
@@ -131,25 +111,49 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ===========================
-     افزودن به سبد
-  ============================ */
+      افزودن به سبد (نسخه کامل)
+    ============================ */
 
   if (addToCartBtn) {
-    addToCartBtn.addEventListener('click', function () {
-      const originalHTML = this.innerHTML;
-      this.innerHTML = `
-        <i class="fas fa-check ml-3 text-lg"></i>
-        <span class="font-semibold text-lg">افزوده شد به سبد</span>
-      `;
-      this.classList.replace('from-emerald-500','from-green-500');
-      this.classList.replace('to-green-500','to-emerald-500');
-      setTimeout(() => {
-        this.innerHTML = originalHTML;
-        this.classList.replace('from-green-500','from-emerald-500');
-        this.classList.replace('to-emerald-500','to-green-500');
-      }, 2000);
+    addToCartBtn.addEventListener('click', async function () {
+      const quantity = parseInt(quantityInput.value) || 1;
+      let variantId = null;
+      const selectedVariant = document.querySelector('.variant-btn.bg-emerald-50');
+      if (selectedVariant) variantId = selectedVariant.dataset.variantId;
+
+      try {
+        const res = await fetch(addCartURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({
+            product_id: productId,
+            quantity: quantity,
+            variant_id: variantId
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          const originalHTML = addToCartBtn.innerHTML;
+          addToCartBtn.innerHTML = `
+            <i class="fas fa-check ml-3 text-lg"></i>
+            <span class="font-semibold text-lg">افزوده شد به سبد</span>
+          `;
+          setTimeout(() => addToCartBtn.innerHTML = originalHTML, 2000);
+        } else {
+          alert(data.error || 'خطا در افزودن به سبد خرید');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('ارتباط با سرور برقرار نشد');
+      }
     });
   }
+
+
 
   /* ===========================
      ⭐ سیستم کامل نظرات ⭐
@@ -170,8 +174,9 @@ document.addEventListener('DOMContentLoaded', function () {
       ratingBox.innerHTML = `
         <i class="fas fa-star ml-1 text-amber-400"></i>
         <span>${data.avg_rating.toFixed(1)}</span>
+        <!--
         <span class="text-amber-500 mx-1">•</span>
-        <span>${data.count} نظر</span>
+        <span>${data.count} نظر</span> -->
       `;
     }
 

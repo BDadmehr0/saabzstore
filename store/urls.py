@@ -11,6 +11,11 @@ urlpatterns = [
     path("store/", views.store, name="store"),
     path("category/<str:slug>/", views.category_view, name="category"),
     path("brand/<str:slug>/", views.brand_view, name="brand"),
+    path("cart/add/", views.add_to_cart, name="add_to_cart"),
+    path("cart/remove/", views.remove_from_cart, name="remove_from_cart"),
+    path("cart/", views.get_cart, name="get_cart"),  # مسیر اصلی سبد
+    path("pay/", views.zarinpal_request),
+    path("verify/", views.zarinpal_verify),
     # API endpoint AJAX
     path("api/products/", views.api_products, name="api_products"),
     path(

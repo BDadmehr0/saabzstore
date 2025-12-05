@@ -106,10 +106,10 @@
               {{ product.name }}
             </h1>
             <div id="rating-box" class="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-sm">
-              <i class="fas fa-star ml-1 text-amber-400"></i>
-              <span>4.8</span>
-              <span class="text-amber-500 mx-1">•</span>
-              <span>124 نظر</span>
+              <!-- <i class="fas fa-star ml-1 text-amber-400"></i> -->
+              <!-- <span>4.8</span> -->
+              <!-- <span class="text-amber-500 mx-1">•</span> -->
+              <!-- <span>124 نظر</span> -->
             </div>
           </div>
           
@@ -407,7 +407,8 @@
 </main>
 
 <script>
-    window.PRODUCT_ID = {{ product.id }};
+  window.PRODUCT_ID = {{ product.id }};
+  const addCartURL = "{% url 'add_to_cart' %}";
 </script>
 
 <script src="{% static 'js/product_detail.js' %}"></script>

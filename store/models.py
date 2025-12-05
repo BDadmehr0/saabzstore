@@ -2,6 +2,7 @@
 import os
 import re
 
+from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 from PIL import Image
@@ -219,21 +220,6 @@ class Order(models.Model):
 
 
 # -----------------------------
-# مدل Variant
-# -----------------------------
-class Variant(models.Model):
-    product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="variants"
-    )
-    name = models.CharField(max_length=120)
-    price = models.PositiveIntegerField()
-    inventory = models.PositiveIntegerField(default=0)
-
-    def __str__(self):
-        return f"{self.product.name} - {self.name}"
-
-
-# -----------------------------
 # مدل Specification
 # -----------------------------
 class Specification(models.Model):
@@ -245,3 +231,31 @@ class Specification(models.Model):
 
     def __str__(self):
         return f"{self.name}: {self.value}"
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def total_price(self):
+        return sum([item.total_price() for item in self.items.all()])
+
+    def __str__(self):
+        return f"سبد خرید {self.user.username}"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        "Product", on_delete=models.CASCADE, null=True, blank=True
+    )
+    # variant = models.ForeignKey("Variant", on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def total_price(self):
+        # دیگر variant وجود ندارد، پس فقط قیمت محصول
+        return self.product.price * self.quantity
+
+    def __str__(self):
+        # دیگر variant نداریم
+        return f"{self.product.name} x {self.quantity}"

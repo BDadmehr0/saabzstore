@@ -2,6 +2,7 @@
 import json
 import random
 
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Avg, Count, Q
 from django.http import JsonResponse
@@ -9,7 +10,8 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from .models import Brand, Category, Order, Product, ProductReview
+from .models import (Brand, Cart, CartItem, Category, Order, Product,
+                     ProductReview)
 
 
 # ---------------------------
@@ -300,3 +302,134 @@ def brand_view(request, slug):
             "products": products,
         },
     )
+
+
+def get_user_cart(user):
+    cart, created = Cart.objects.get_or_create(user=user)
+    return cart
+
+
+@csrf_exempt
+@login_required
+def add_to_cart(request):
+    try:
+        if request.method != "POST":
+            return JsonResponse({"success": False, "error": "روش درخواست نامعتبر است"})
+
+        data = json.loads(request.body)
+        product_id = data.get("product_id")
+        quantity = int(data.get("quantity", 1))
+
+        product = Product.objects.get(id=product_id)
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
+        # پیدا کردن آیتم موجود در سبد
+        item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+        # محدود کردن تعداد اضافه شده به موجودی واقعی
+        if item.quantity + quantity > product.inventory:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": f"مقدار درخواستی بیشتر از موجودی ({product.inventory}) است.",
+                }
+            )
+
+        item.quantity += quantity
+        item.save()
+
+        return JsonResponse({"success": True, "message": "محصول اضافه شد"})
+    except Exception as e:
+        import traceback
+
+        traceback.print_exc()
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+@csrf_exempt
+@login_required
+def remove_from_cart(request):
+    data = json.loads(request.body)
+    item_id = data.get("item_id")
+
+    try:
+        item = CartItem.objects.get(id=item_id, cart__user=request.user)
+        item.delete()
+        return JsonResponse({"success": True})
+    except CartItem.DoesNotExist:
+        return JsonResponse({"success": False, "error": "آیتم یافت نشد"})
+
+
+@login_required
+def get_cart(request):
+    cart = get_user_cart(request.user)
+    items = [
+        {
+            "id": item.id,
+            "title": item.product.title,
+            "price": item.product.price,
+            "quantity": item.quantity,
+            "total": item.total_price(),
+        }
+        for item in cart.items.all()
+    ]
+
+    return JsonResponse(
+        {
+            "success": True,
+            "items": items,
+            "total_price": cart.total_price(),
+        }
+    )
+
+
+@login_required
+def zarinpal_request(request):
+    cart = get_user_cart(request.user)
+    amount = cart.total_price()
+
+    ZARINPAL_MERCHANT = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+    CALLBACK_URL = "https://your-domain.com/shop/verify/"
+
+    data = {
+        "merchant_id": ZARINPAL_MERCHANT,
+        "amount": amount,
+        "description": "پرداخت سبد خرید",
+        "callback_url": CALLBACK_URL,
+    }
+
+    response = requests.post(
+        "https://api.zarinpal.com/pg/v4/payment/request.json", json=data
+    ).json()
+
+    if response["data"]["code"] == 100:
+        return JsonResponse(
+            {
+                "success": True,
+                "redirect_url": "https://www.zarinpal.com/pg/StartPay/"
+                + response["data"]["authority"],
+            }
+        )
+    return JsonResponse({"success": False, "error": "مشکل در اتصال به زرین‌پال"})
+
+
+@login_required
+def zarinpal_verify(request):
+    authority = request.GET.get("Authority")
+    cart = get_user_cart(request.user)
+    amount = cart.total_price()
+
+    data = {
+        "merchant_id": "YOUR_MERCHANT_ID",
+        "amount": amount,
+        "authority": authority,
+    }
+
+    response = requests.post(
+        "https://api.zarinpal.com/pg/v4/payment/verify.json", json=data
+    ).json()
+
+    if response["data"]["code"] == 100:
+        cart.items.all().delete()
+        return JsonResponse({"success": True, "message": "پرداخت موفق"})
+    return JsonResponse({"success": False, "error": "پرداخت ناموفق"})
