@@ -2,25 +2,25 @@
 
     <!-- نورهای حجمی پس‌زمینه -->
     <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute -top-32 -right-20 w-96 h-96 bg-emerald-300/20 rounded-full blur-[120px]"></div>
-        <div class="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[140px]"></div>
+        <div class="absolute -top-32 -right-20 w-80 h-80 sm:w-96 sm:h-96 bg-emerald-300/20 rounded-full blur-[80px] sm:blur-[120px]"></div>
+        <div class="absolute -bottom-32 -left-24 w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] bg-emerald-500/10 rounded-full blur-[90px] sm:blur-[140px]"></div>
     </div>
 
-    <!-- شبکه سه‌بعدی -->
-    <div class="absolute inset-0 opacity-[0.08]">
+    <!-- شبکه سه‌بعدی (موبایل غیرفعال) -->
+    <div class="absolute inset-0 opacity-[0.08] hidden sm:block">
         <div class="absolute inset-0 animate-footer-grid"></div>
     </div>
 
-    <!-- خطوط نئونی افقی -->
-    <div class="absolute w-[200%] h-[3px] bg-gradient-to-r from-transparent via-emerald-300 to-transparent top-1/3 animate-neon-line"></div>
-    <div class="absolute w-[200%] h-[3px] bg-gradient-to-r from-transparent via-emerald-200 to-transparent top-2/3 animate-neon-line-fast"></div>
+    <!-- خطوط نئونی افقی (موبایل حذف شد — علت اصلی لرزش) -->
+    <div class="absolute w-[200%] h-[3px] bg-gradient-to-r from-transparent via-emerald-300 to-transparent top-1/3 animate-neon-line hidden sm:block"></div>
+    <div class="absolute w-[200%] h-[3px] bg-gradient-to-r from-transparent via-emerald-200 to-transparent top-2/3 animate-neon-line-fast hidden sm:block"></div>
 
-    <!-- گوی نورانی پالس‌دار -->
+    <!-- گوی نورانی پالس‌دار — نسخه سبک‌تر موبایل -->
     <div class="absolute left-1/2 top-[40%] -translate-x-1/2">
-        <div class="w-40 h-40 rounded-full bg-emerald-400/40 blur-3xl animate-pulse-fast"></div>
+        <div class="w-28 h-28 sm:w-40 sm:h-40 rounded-full bg-emerald-400/40 blur-xl sm:blur-3xl animate-pulse-fast"></div>
     </div>
 
-    <div class="container relative z-10 mx-auto px-4">
+    <div class="relative z-10 mx-auto px-4 max-w-screen-xl">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
 
             <!-- ستون 1 -->

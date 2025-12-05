@@ -1,5 +1,15 @@
 /* ----------------- GLOBAL ----------------- */
 
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('/static/fonts/Vazirmatn[wght].woff2') format('woff2-variations'),
+         url('/static/fonts/Vazirmatn[wght].woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+
 * {
     box-sizing: border-box;
 }
@@ -29,6 +39,7 @@ img {
     max-width: 100%;
     height: auto;
 }
+
 
 /* ----------------- CUSTOM SCROLLBAR ----------------- */
 

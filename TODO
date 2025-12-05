@@ -13,12 +13,12 @@
 [+] slug redirct update when edit
 [+] product des store.html word limit not working
 [+] Store product title limit
+[+] sortSelect backend ajax fix (live ajax)
 [+] Create account section
     [+] Dashboard
     [+] auth (otp, password, phone, name)
     [] connect otp service sms.ir
     [] improve auth.html, dashboard.html ui/ux
-[] Product comments & stars create
 [] Price filter maximum price get form db
 [] product_detail.html ui/ux Improve(deepseek)
     - [+] Breadcrumb
@@ -34,9 +34,15 @@
     - [+] avabile
     - [+] rate
     - [+] change default desc
+
+- [+] Cart
+    - [] Front
 [] Zarinpal payment
-[] Create Email (papelbar.ir@gmail.com)
-[+] sortSelect backend ajax fix (live ajax)
 [] index.html special product slider and more prduct can add more 3+
 [] Improve admin panel ui ux (custom dashboard)
 [] clean code python file
+[] Create Email (papelbar.ir@gmail.com)
+
+
+
+[] filter not working on mobile and filter popup section
